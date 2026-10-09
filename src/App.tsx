@@ -5,10 +5,13 @@ import { BalanceCard } from './components/BalanceCard';
 import { PaymentForm } from './components/PaymentForm';
 import { DemandCirclesSection } from './components/DemandCirclesSection';
 import { WalletModal } from './components/WalletModal';
+import { CreateCircleModal } from './components/CreateCircleModal';
+import { CircleDetailModal } from './components/CircleDetailModal';
 import { Toast, ToastMessage } from './components/Toast';
 import {
   WalletAccount,
   WalletStatus,
+  WalletType,
   AccountBalanceState,
 } from './types/wallet';
 import {
@@ -16,6 +19,7 @@ import {
   PaymentStatus,
   TransactionConfirmation,
 } from './types/payment';
+import { OnChainDemandCircle } from './types/contract';
 import {
   fetchAccountBalances,
   buildPaymentTransactionXdr,
@@ -23,11 +27,7 @@ import {
   fundWithFriendbot,
   EXPLORER_BASE_URL,
 } from './services/stellar-horizon';
-import { FreighterWalletService } from './services/freighter-wallet';
-import {
-  CompanionSignerService,
-  CompanionAccount,
-} from './services/companion-signer';
+import { WalletManager } from './services/wallet-manager';
 import { shortenAddress } from './services/validation';
 import { ArrowRight, Sparkles, Lock } from 'lucide-react';
 
@@ -37,7 +37,6 @@ export const App: React.FC = () => {
   const [walletStatus, setWalletStatus] = useState<WalletStatus>('DISCONNECTED');
   const [walletModalOpen, setWalletModalOpen] = useState(false);
   const [walletError, setWalletError] = useState<string | null>(null);
-  const [companionAccount, setCompanionAccount] = useState<CompanionAccount | null>(null);
 
   // Balance State
   const [balanceState, setBalanceState] = useState<AccountBalanceState>({
@@ -56,6 +55,11 @@ export const App: React.FC = () => {
   const [confirmation, setConfirmation] = useState<TransactionConfirmation | null>(null);
   const [paymentError, setPaymentError] = useState<string | null>(null);
 
+  // Demand Circle Modals & Sync
+  const [createCircleModalOpen, setCreateCircleModalOpen] = useState(false);
+  const [selectedCircleDetails, setSelectedCircleDetails] = useState<OnChainDemandCircle | null>(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
   // Toasts
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
@@ -64,7 +68,7 @@ export const App: React.FC = () => {
     setToasts((prev) => [...prev, { id, type, message }]);
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));
-    }, 4500);
+    }, 5000);
   };
 
   const removeToast = (id: string) => {
@@ -86,62 +90,30 @@ export const App: React.FC = () => {
     }
   }, []);
 
-  // Handle Connect with Freighter
-  const handleConnectFreighter = async () => {
+  // Multi-Wallet Selection & Connection
+  const handleSelectWallet = async (type: WalletType) => {
     setWalletStatus('CONNECTING');
     setWalletError(null);
     try {
-      const res = await FreighterWalletService.connect();
-      const account: WalletAccount = {
-        address: res.address,
-        shortAddress: shortenAddress(res.address),
-        network: res.network,
-        isTestnet: res.isTestnet,
-        type: 'FREIGHTER',
-      };
+      const account = await WalletManager.connect(type);
       setWalletAccount(account);
       setWalletStatus('CONNECTED');
       setWalletModalOpen(false);
-      addToast('SUCCESS', `Connected Freighter: ${shortenAddress(res.address)}`);
-      refreshBalance(res.address);
+      addToast('SUCCESS', `Connected to ${account.type} (${account.shortAddress})`);
+      await refreshBalance(account.address);
     } catch (err: any) {
       setWalletStatus('ERROR');
-      setWalletError(err?.message || 'Failed to connect to Freighter.');
-      addToast('ERROR', err?.message || 'Failed to connect to Freighter.');
-    }
-  };
-
-  // Handle Connect with Companion Testnet Signer
-  const handleConnectCompanion = async () => {
-    setWalletStatus('CONNECTING');
-    setWalletError(null);
-    try {
-      const companion = await CompanionSignerService.getOrCreateCompanion();
-      setCompanionAccount(companion);
-      const account: WalletAccount = {
-        address: companion.publicKey,
-        shortAddress: shortenAddress(companion.publicKey),
-        network: 'TESTNET',
-        isTestnet: true,
-        type: 'COMPANION',
-      };
-      setWalletAccount(account);
-      setWalletStatus('CONNECTED');
-      setWalletModalOpen(false);
-      addToast('SUCCESS', `Connected Testnet Companion: ${shortenAddress(companion.publicKey)}`);
-      refreshBalance(companion.publicKey);
-    } catch (err: any) {
-      setWalletStatus('ERROR');
-      setWalletError(err?.message || 'Failed to initialize Testnet companion.');
-      addToast('ERROR', err?.message || 'Failed to initialize Testnet companion.');
+      const msg = err?.message || `Failed to connect to ${type}.`;
+      setWalletError(msg);
+      addToast('ERROR', msg);
     }
   };
 
   // Disconnect
-  const handleDisconnect = () => {
+  const handleDisconnect = async () => {
+    await WalletManager.disconnect();
     setWalletAccount(null);
     setWalletStatus('DISCONNECTED');
-    setCompanionAccount(null);
     setBalanceState({
       xlm: '0.0000000',
       balances: [],
@@ -156,7 +128,7 @@ export const App: React.FC = () => {
     addToast('INFO', 'Wallet disconnected cleanly.');
   };
 
-  // Faucet Request
+  // Friendbot Faucet Request
   const handleFundFaucet = async () => {
     if (!walletAccount?.address) return;
     setIsFunding(true);
@@ -174,7 +146,7 @@ export const App: React.FC = () => {
     }
   };
 
-  // Submit Payment
+  // Submit Payment / Circle Escrow Funding
   const handleSubmitPayment = async (values: PaymentFormValues) => {
     if (!walletAccount?.address) {
       addToast('ERROR', 'Please connect your wallet first.');
@@ -195,22 +167,15 @@ export const App: React.FC = () => {
         memo: values.memo,
       });
 
-      // Step 2: Signing Transaction
+      // Step 2: Signing Transaction with active wallet
       setPaymentStatus('AWAITING_WALLET_SIGNATURE');
       setPaymentStatusMessage(
         walletAccount.type === 'FREIGHTER'
-          ? 'Please review and approve the transaction in the Freighter popup window...'
-          : 'Signing transaction envelope with Testnet Companion Keypair...'
+          ? 'Please review and approve the transaction in the Freighter extension...'
+          : `Please authorize the transaction in your ${walletAccount.type} wallet...`
       );
 
-      let signedXdr: string;
-      if (walletAccount.type === 'FREIGHTER') {
-        signedXdr = await FreighterWalletService.signTransaction(xdr);
-      } else if (companionAccount) {
-        signedXdr = CompanionSignerService.signTransaction(xdr, companionAccount.secretKey);
-      } else {
-        throw new Error('No active signing provider found.');
-      }
+      const signedXdr = await WalletManager.signTransaction(xdr);
 
       // Step 3: Submitting to Testnet
       setPaymentStatus('SUBMITTING_TO_TESTNET');
@@ -241,6 +206,12 @@ export const App: React.FC = () => {
       setPaymentError(errMsg);
       addToast('ERROR', errMsg);
     }
+  };
+
+  // Handle Circle Created
+  const handleCircleCreated = (circleId: number, txHash: string) => {
+    addToast('SUCCESS', `Demand Circle #${circleId} recorded on Soroban! Tx: ${txHash.slice(0, 8)}...`);
+    setRefreshTrigger((prev) => prev + 1);
   };
 
   return (
@@ -311,7 +282,7 @@ export const App: React.FC = () => {
               lineHeight: 1.6,
             }}
           >
-            Stellar Bazaar coordinates collective consumer demand into Demand Circles. Sellers submit competitive fulfillment quotes, and Soroban smart contracts enforce custody, escrow, and milestone settlement.
+            Stellar Bazaar coordinates collective consumer demand into Demand Circles. Sellers submit competitive fulfillment quotes, and Soroban smart contracts enforce commercial rules and escrow settlement.
           </p>
         </div>
 
@@ -369,7 +340,7 @@ export const App: React.FC = () => {
             </div>
 
             <h2 style={{ fontSize: '1.5rem', marginBottom: '0.75rem' }}>
-              Connect Your Wallet to Access Testnet Payments
+              Connect Your Wallet to Access Demand Circles & Payments
             </h2>
             <p
               style={{
@@ -380,7 +351,7 @@ export const App: React.FC = () => {
                 lineHeight: 1.6,
               }}
             >
-              Connect with Freighter or initiate an instant Testnet Companion account to retrieve your real Testnet XLM balance and submit signed transactions.
+              Connect with Freighter, xBull, Albedo, Hana, or an instant Testnet Companion account to retrieve your real Testnet balance and interact with Soroban smart contracts.
             </p>
 
             <button
@@ -398,28 +369,53 @@ export const App: React.FC = () => {
 
         {/* Demand Circles Section */}
         <DemandCirclesSection
+          onOpenCreateCircle={() => setCreateCircleModalOpen(true)}
+          onSelectCircleDetails={(circle) => setSelectedCircleDetails(circle)}
           onSelectCircleForPayment={(circle) => {
             if (walletStatus !== 'CONNECTED') {
               setWalletModalOpen(true);
             } else {
               addToast(
                 'INFO',
-                `Selected ${circle.title}. Fill destination address to fund circle escrow.`
+                `Selected Circle #${circle.id} ("${circle.title}"). Form ready for escrow payment.`
               );
               window.scrollTo({ top: 300, behavior: 'smooth' });
             }
           }}
+          walletConnected={walletStatus === 'CONNECTED'}
+          refreshTrigger={refreshTrigger}
         />
       </main>
 
-      {/* Wallet Connect Modal */}
+      {/* Multi-Wallet Connect Modal */}
       <WalletModal
         isOpen={walletModalOpen}
         onClose={() => setWalletModalOpen(false)}
-        onConnectFreighter={handleConnectFreighter}
-        onConnectCompanion={handleConnectCompanion}
+        onSelectWallet={handleSelectWallet}
         isConnecting={walletStatus === 'CONNECTING'}
+        activeWalletType={walletAccount?.type || null}
         errorMessage={walletError}
+      />
+
+      {/* Create Demand Circle Modal */}
+      {walletAccount && (
+        <CreateCircleModal
+          isOpen={createCircleModalOpen}
+          onClose={() => setCreateCircleModalOpen(false)}
+          creatorAddress={walletAccount.address}
+          onCircleCreated={handleCircleCreated}
+        />
+      )}
+
+      {/* Demand Circle Detail Modal */}
+      <CircleDetailModal
+        circle={selectedCircleDetails}
+        onClose={() => setSelectedCircleDetails(null)}
+        onSelectForPayment={(circle) => {
+          setSelectedCircleDetails(null);
+          addToast('INFO', `Selected Circle #${circle.id} for payment.`);
+          window.scrollTo({ top: 300, behavior: 'smooth' });
+        }}
       />
 
       {/* Notifications Toast */}

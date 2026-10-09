@@ -114,7 +114,15 @@ export const Navbar: React.FC<NavbarProps> = ({
                   {shortenAddress(walletAccount.address, 5)}
                 </span>
                 <span style={{ fontSize: '0.65rem', color: 'var(--accent-success)' }}>
-                  {walletAccount.type === 'FREIGHTER' ? 'Freighter Wallet' : 'Testnet Companion'}
+                  {walletAccount.type === 'FREIGHTER'
+                    ? 'Freighter'
+                    : walletAccount.type === 'XBULL'
+                    ? 'xBull'
+                    : walletAccount.type === 'ALBEDO'
+                    ? 'Albedo'
+                    : walletAccount.type === 'HANA'
+                    ? 'Hana'
+                    : 'Testnet Companion'}
                 </span>
               </div>
 
@@ -174,7 +182,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               ) : (
                 <>
                   <Wallet size={18} />
-                  <span>Connect Freighter</span>
+                  <span>Connect Wallet</span>
                 </>
               )}
             </button>

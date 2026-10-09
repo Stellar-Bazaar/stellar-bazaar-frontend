@@ -1,243 +1,465 @@
-import React from 'react';
-import { Users, Clock, Tag, ArrowUpRight } from 'lucide-react';
-import { DemandCircleDemo } from '../types/bazaar';
+import React, { useState, useEffect } from 'react';
+import {
+  Clock,
+  PlusCircle,
+  RefreshCw,
+  ShieldCheck,
+  Activity,
+  Layers,
+  ExternalLink,
+  Copy,
+  Check,
+} from 'lucide-react';
+import { OnChainDemandCircle, ContractEventItem } from '../types/contract';
+import { SorobanContractService } from '../services/soroban-contract';
 
 interface DemandCirclesSectionProps {
-  onSelectCircleForPayment?: (circle: DemandCircleDemo) => void;
+  onOpenCreateCircle: () => void;
+  onSelectCircleDetails: (circle: OnChainDemandCircle) => void;
+  onSelectCircleForPayment?: (circle: OnChainDemandCircle) => void;
+  walletConnected: boolean;
+  refreshTrigger: number;
 }
 
-const DEMO_CIRCLES: DemandCircleDemo[] = [
-  {
-    id: 'circle-solar-2026',
-    title: 'Commercial Solar Inverters 5kW',
-    category: 'Renewable Energy',
-    description:
-      'Aggregated business demand pool for high-efficiency solar grid-tie inverters. Bulk pricing unlocks at 25 units.',
-    targetUnitPriceXlm: 120.0,
-    marketPriceXlm: 185.0,
-    minVolume: 25,
-    currentVolume: 19,
-    maxVolume: 50,
-    participantsCount: 8,
-    deadlineHours: 48,
-    status: 'OPEN',
-    sellerQuotesCount: 3,
-    bestSellerQuoteXlm: 115.0,
-  },
-  {
-    id: 'circle-iot-sensors',
-    title: 'Precision Soil Moisture LoRaWAN Sensors',
-    category: 'AgriTech Hardware',
-    description:
-      'Cooperative farm sensor purchase. Soroban escrow releases milestone funds upon verified supplier batch shipment.',
-    targetUnitPriceXlm: 45.0,
-    marketPriceXlm: 70.0,
-    minVolume: 100,
-    currentVolume: 100,
-    maxVolume: 200,
-    participantsCount: 22,
-    deadlineHours: 12,
-    status: 'QUORUM_REACHED',
-    sellerQuotesCount: 5,
-    bestSellerQuoteXlm: 42.5,
-  },
-  {
-    id: 'circle-coffee-roast',
-    title: 'Direct-Trade Specialty Green Coffee Beans',
-    category: 'Commodities',
-    description:
-      'Independent cafe roaster collective purchasing single-origin green coffee bags directly from producers.',
-    targetUnitPriceXlm: 80.0,
-    marketPriceXlm: 110.0,
-    minVolume: 40,
-    currentVolume: 34,
-    maxVolume: 80,
-    participantsCount: 14,
-    deadlineHours: 96,
-    status: 'OPEN',
-    sellerQuotesCount: 2,
-    bestSellerQuoteXlm: 78.0,
-  },
-];
-
 export const DemandCirclesSection: React.FC<DemandCirclesSectionProps> = ({
+  onOpenCreateCircle,
+  onSelectCircleDetails,
   onSelectCircleForPayment,
+  walletConnected,
+  refreshTrigger,
 }) => {
+  const [circles, setCircles] = useState<OnChainDemandCircle[]>([]);
+  const [events, setEvents] = useState<ContractEventItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSyncingEvents, setIsSyncingEvents] = useState(false);
+  const [copiedContract, setCopiedContract] = useState(false);
+
+  const contractConfig = SorobanContractService.getConfig();
+
+  const loadOnChainData = async () => {
+    setIsLoading(true);
+    try {
+      const onChainCircles = await SorobanContractService.getAllCircles();
+      setCircles(onChainCircles);
+      const syncedEvents = await SorobanContractService.syncEvents();
+      setEvents(syncedEvents);
+    } catch (err) {
+      console.warn('Failed to load on-chain circles:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadOnChainData();
+  }, [refreshTrigger]);
+
+  const handleManualSync = async () => {
+    setIsSyncingEvents(true);
+    try {
+      await loadOnChainData();
+    } finally {
+      setIsSyncingEvents(false);
+    }
+  };
+
+  const handleCopyContract = () => {
+    navigator.clipboard.writeText(contractConfig.contractId);
+    setCopiedContract(true);
+    setTimeout(() => setCopiedContract(false), 2000);
+  };
+
   return (
-    <section style={{ marginTop: '3rem' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.75rem' }}>
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-            <h2 className="section-title" style={{ marginBottom: 0 }}>
-              Active Demand Circles
-            </h2>
-            <span className="badge badge-demo">Demonstration Content</span>
+    <section style={{ marginTop: '3.5rem' }}>
+      {/* Contract Status Header Banner */}
+      <div
+        style={{
+          background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.8) 100%)',
+          border: '1px solid rgba(99, 102, 241, 0.25)',
+          borderRadius: 'var(--radius-lg)',
+          padding: '1.25rem 1.5rem',
+          marginBottom: '2rem',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: '1rem',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div
+            style={{
+              width: '44px',
+              height: '44px',
+              borderRadius: '12px',
+              background: 'rgba(99, 102, 241, 0.15)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              border: '1px solid rgba(99, 102, 241, 0.3)',
+            }}
+          >
+            <ShieldCheck size={24} color="var(--accent-primary-light)" />
           </div>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.25rem' }}>
-            Buyers combine aggregate demand volume. Suppliers compete on unit price. Contracts settle milestones.
-          </p>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+              <span style={{ fontWeight: 700, fontSize: '1rem', color: '#fff' }}>
+                Soroban DemandCircleRegistry
+              </span>
+              <span className="badge badge-success">Protocol 22 Active</span>
+              <span className="badge badge-testnet">Stellar Testnet</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.25rem' }}>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Contract ID:</span>
+              <code
+                style={{
+                  fontFamily: 'monospace',
+                  fontSize: '0.78rem',
+                  color: 'var(--accent-secondary)',
+                  background: 'rgba(0,0,0,0.3)',
+                  padding: '2px 6px',
+                  borderRadius: '4px',
+                }}
+              >
+                {contractConfig.contractId}
+              </code>
+              <button
+                type="button"
+                onClick={handleCopyContract}
+                style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}
+                title="Copy Contract Address"
+              >
+                {copiedContract ? <Check size={12} color="var(--success)" /> : <Copy size={12} />}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <a
+            href={contractConfig.explorerUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-secondary"
+            style={{ fontSize: '0.8rem', padding: '0.45rem 0.85rem' }}
+          >
+            <span>Contract Explorer</span>
+            <ExternalLink size={13} />
+          </a>
+          <button
+            type="button"
+            onClick={handleManualSync}
+            disabled={isSyncingEvents}
+            className="btn btn-secondary"
+            style={{ fontSize: '0.8rem', padding: '0.45rem 0.85rem' }}
+          >
+            <RefreshCw size={13} className={isSyncingEvents ? 'spinner' : ''} />
+            <span>Sync On-Chain</span>
+          </button>
         </div>
       </div>
 
+      {/* Section Title & Actions */}
       <div
         style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-          gap: '1.5rem',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: '1.5rem',
+          flexWrap: 'wrap',
+          gap: '1rem',
         }}
       >
-        {DEMO_CIRCLES.map((circle) => {
-          const progressPercent = Math.min(100, Math.round((circle.currentVolume / circle.minVolume) * 100));
-          const discountPercent = Math.round(
-            ((circle.marketPriceXlm - circle.targetUnitPriceXlm) / circle.marketPriceXlm) * 100
-          );
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+            <h2 className="section-title" style={{ marginBottom: 0 }}>
+              Live Demand Circles
+            </h2>
+            <span className="badge badge-testnet">On-Chain Registry</span>
+          </div>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginTop: '0.25rem' }}>
+            Authoritative Soroban contract storage. Buyers aggregate purchase volume; commercial constraints settle trustlessly.
+          </p>
+        </div>
 
-          return (
-            <div
-              key={circle.id}
-              className="glass-card"
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                position: 'relative',
-                overflow: 'hidden',
-              }}
-            >
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
-                  <span
+        <div>
+          <button
+            type="button"
+            id="btn-open-create-circle"
+            onClick={onOpenCreateCircle}
+            disabled={!walletConnected}
+            className="btn btn-primary"
+            style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+          >
+            <PlusCircle size={16} />
+            <span>Create Demand Circle</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Circle Cards Grid */}
+      {isLoading ? (
+        <div
+          style={{
+            textAlign: 'center',
+            padding: '3rem 1rem',
+            background: 'rgba(255, 255, 255, 0.02)',
+            borderRadius: 'var(--radius-lg)',
+            border: '1px solid var(--border-subtle)',
+          }}
+        >
+          <div className="spinner" style={{ width: '32px', height: '32px', margin: '0 auto 1rem auto' }} />
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+            Querying Soroban contract storage on Stellar Testnet...
+          </p>
+        </div>
+      ) : circles.length === 0 ? (
+        <div
+          style={{
+            textAlign: 'center',
+            padding: '3rem 1rem',
+            background: 'rgba(255, 255, 255, 0.02)',
+            borderRadius: 'var(--radius-lg)',
+            border: '1px solid var(--border-subtle)',
+          }}
+        >
+          <Layers size={40} color="var(--text-muted)" style={{ margin: '0 auto 1rem auto' }} />
+          <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '0.5rem' }}>
+            No Demand Circles Found
+          </h3>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '1.25rem' }}>
+            Be the first buyer to create a demand circle on the deployed registry contract.
+          </p>
+          <button
+            type="button"
+            onClick={onOpenCreateCircle}
+            disabled={!walletConnected}
+            className="btn btn-primary"
+          >
+            <PlusCircle size={16} />
+            <span>Create First Circle</span>
+          </button>
+        </div>
+      ) : (
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+            gap: '1.25rem',
+          }}
+        >
+          {circles.map((circle) => {
+            const totalPoolXlm = (
+              circle.target_quantity * parseFloat(circle.target_price_xlm)
+            ).toFixed(2);
+
+            return (
+              <div
+                key={circle.id}
+                id={`circle-card-${circle.id}`}
+                className="glass-card interactive"
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  padding: '1.25rem',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  cursor: 'pointer',
+                  position: 'relative',
+                }}
+                onClick={() => onSelectCircleDetails(circle)}
+              >
+                <div>
+                  {/* Card Header */}
+                  <div
                     style={{
-                      fontSize: '0.75rem',
-                      fontWeight: 600,
-                      color: 'var(--accent-secondary)',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.05em',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      marginBottom: '0.75rem',
                     }}
                   >
-                    {circle.category}
-                  </span>
-                  <span
-                    className={`badge ${circle.status === 'QUORUM_REACHED' ? 'badge-success' : 'badge-testnet'}`}
+                    <span className="badge badge-primary">Circle #{circle.id}</span>
+                    <span
+                      className={`badge ${
+                        circle.status === 'OPEN'
+                          ? 'badge-success'
+                          : circle.status === 'CLOSED'
+                          ? 'badge-testnet'
+                          : 'badge-demo'
+                      }`}
+                    >
+                      {circle.status}
+                    </span>
+                  </div>
+
+                  <h3
+                    style={{
+                      fontSize: '1.05rem',
+                      fontWeight: 700,
+                      marginBottom: '0.5rem',
+                      color: '#fff',
+                      lineHeight: 1.3,
+                    }}
                   >
-                    {circle.status === 'QUORUM_REACHED' ? 'Quorum Reached' : 'Aggregating'}
-                  </span>
-                </div>
+                    {circle.title}
+                  </h3>
 
-                <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem', fontWeight: 700 }}>
-                  {circle.title}
-                </h3>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1.25rem', lineHeight: 1.5 }}>
-                  {circle.description}
-                </p>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
+                    Creator: <span style={{ fontFamily: 'monospace' }}>{circle.creator.slice(0, 8)}...{circle.creator.slice(-6)}</span>
+                  </div>
 
-                {/* Pricing comparison */}
-                <div
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.03)',
-                    padding: '0.85rem 1rem',
-                    borderRadius: 'var(--radius-md)',
-                    marginBottom: '1rem',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}
-                >
-                  <div>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>Target Unit Price</span>
-                    <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.4rem' }}>
-                      <span style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--text-main)' }}>
-                        {circle.targetUnitPriceXlm} XLM
-                      </span>
-                      <span style={{ fontSize: '0.8rem', color: 'var(--text-dim)', textDecoration: 'line-through' }}>
-                        {circle.marketPriceXlm} XLM
-                      </span>
+                  {/* Commercial Metrics Box */}
+                  <div
+                    style={{
+                      background: 'rgba(0, 0, 0, 0.25)',
+                      borderRadius: 'var(--radius-sm)',
+                      padding: '0.75rem',
+                      display: 'grid',
+                      gridTemplateColumns: '1fr 1fr',
+                      gap: '0.5rem',
+                      marginBottom: '1rem',
+                      border: '1px solid rgba(255, 255, 255, 0.05)',
+                    }}
+                  >
+                    <div>
+                      <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Target Price</div>
+                      <div style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--accent-secondary)' }}>
+                        {circle.target_price_xlm} XLM
+                      </div>
+                    </div>
+                    <div>
+                      <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Target Volume</div>
+                      <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#fff' }}>
+                        {circle.target_quantity} units
+                      </div>
                     </div>
                   </div>
-                  <div
-                    style={{
-                      background: 'rgba(16, 185, 129, 0.15)',
-                      color: '#34d399',
-                      padding: '0.3rem 0.6rem',
-                      borderRadius: 'var(--radius-sm)',
-                      fontSize: '0.8rem',
-                      fontWeight: 700,
-                    }}
-                  >
-                    -{discountPercent}%
-                  </div>
                 </div>
 
-                {/* Quorum Progress Bar */}
-                <div style={{ marginBottom: '1rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '0.4rem' }}>
-                    <span style={{ color: 'var(--text-muted)' }}>
-                      Volume: <strong style={{ color: 'var(--text-main)' }}>{circle.currentVolume}</strong> / {circle.minVolume} units
-                    </span>
-                    <span style={{ fontWeight: 600, color: progressPercent >= 100 ? '#34d399' : 'var(--accent-primary-light)' }}>
-                      {progressPercent}% Quorum
-                    </span>
-                  </div>
+                {/* Footer with Pool size & Deadline */}
+                <div>
                   <div
                     style={{
-                      height: '8px',
-                      background: 'rgba(255, 255, 255, 0.08)',
-                      borderRadius: 'var(--radius-full)',
-                      overflow: 'hidden',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      fontSize: '0.78rem',
+                      color: 'var(--text-muted)',
+                      paddingTop: '0.75rem',
+                      borderTop: '1px solid rgba(255, 255, 255, 0.06)',
                     }}
                   >
-                    <div
-                      style={{
-                        height: '100%',
-                        width: `${progressPercent}%`,
-                        background:
-                          progressPercent >= 100
-                            ? 'linear-gradient(90deg, #10b981 0%, #34d399 100%)'
-                            : 'linear-gradient(90deg, #6366f1 0%, #06b6d4 100%)',
-                        transition: 'width 0.5s ease',
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                      <Clock size={12} />
+                      <span style={{ color: circle.isExpired ? '#f87171' : 'var(--text-muted)' }}>
+                        {circle.isExpired ? 'Expired' : circle.deadlineDate.split(',')[0]}
+                      </span>
+                    </div>
+                    <div style={{ fontWeight: 600, color: '#fff' }}>
+                      Pool: {totalPoolXlm} XLM
+                    </div>
+                  </div>
+                  {onSelectCircleForPayment && (
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      style={{ fontSize: '0.75rem', padding: '0.35rem 0.5rem', marginTop: '0.65rem', width: '100%' }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onSelectCircleForPayment(circle);
                       }}
-                    />
-                  </div>
+                    >
+                      <span>Commit Payment Escrow</span>
+                    </button>
+                  )}
                 </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
 
-                {/* Metadata details */}
+      {/* Contract Events Feed Section */}
+      <div style={{ marginTop: '3rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
+          <Activity size={18} color="var(--accent-primary-light)" />
+          <h3 style={{ fontSize: '1rem', fontWeight: 700, margin: 0 }}>
+            Live Soroban Event Stream
+          </h3>
+          <span className="badge badge-testnet">RPC Indexer</span>
+        </div>
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: '1rem' }}>
+          Synchronized contract events consumed directly from Soroban RPC with deduplication and replay safety.
+        </p>
+
+        <div
+          style={{
+            background: 'rgba(15, 23, 42, 0.6)',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            borderRadius: 'var(--radius-md)',
+            overflow: 'hidden',
+          }}
+        >
+          {events.length === 0 ? (
+            <div style={{ padding: '1.25rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+              No contract events recorded yet for this session.
+            </div>
+          ) : (
+            <div style={{ maxHeight: '240px', overflowY: 'auto' }}>
+              {events.map((ev, idx) => (
                 <div
+                  key={ev.id || idx}
                   style={{
                     display: 'flex',
+                    alignItems: 'center',
                     justifyContent: 'space-between',
-                    fontSize: '0.775rem',
-                    color: 'var(--text-dim)',
-                    paddingTop: '0.5rem',
-                    borderTop: '1px solid var(--border-subtle)',
+                    padding: '0.75rem 1rem',
+                    borderBottom: '1px solid rgba(255, 255, 255, 0.04)',
+                    fontSize: '0.8rem',
+                    flexWrap: 'wrap',
+                    gap: '0.5rem',
                   }}
                 >
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                    <Users size={14} /> {circle.participantsCount} Buyers
-                  </span>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                    <Clock size={14} /> {circle.deadlineHours}h Remaining
-                  </span>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                    <Tag size={14} /> {circle.sellerQuotesCount} Seller Bids
-                  </span>
-                </div>
-              </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                    <span className="badge badge-success" style={{ fontSize: '0.7rem' }}>
+                      {ev.type}
+                    </span>
+                    <span style={{ fontWeight: 600, color: '#fff' }}>
+                      Demand Circle #{ev.circleId || 1}
+                    </span>
+                    <span style={{ color: 'var(--text-muted)' }}>
+                      Ledger #{ev.ledger}
+                    </span>
+                  </div>
 
-              {/* Action trigger */}
-              <div style={{ marginTop: '1.25rem' }}>
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  style={{ width: '100%', fontSize: '0.85rem' }}
-                  onClick={() => onSelectCircleForPayment && onSelectCircleForPayment(circle)}
-                >
-                  <span>Commit Escrow Deposit</span>
-                  <ArrowUpRight size={14} />
-                </button>
-              </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>
+                      {ev.timestamp}
+                    </span>
+                    {ev.txHash && (
+                      <a
+                        href={`https://stellar.expert/explorer/testnet/tx/${ev.txHash}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          color: 'var(--accent-secondary)',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '2px',
+                          textDecoration: 'none',
+                        }}
+                      >
+                        <span>Tx</span>
+                        <ExternalLink size={11} />
+                      </a>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
-          );
-        })}
+          )}
+        </div>
       </div>
     </section>
   );
