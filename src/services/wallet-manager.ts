@@ -267,6 +267,7 @@ const ADAPTERS: Record<WalletType, WalletAdapter> = {
 
 export class WalletManager {
   private static activeAdapter: WalletAdapter | null = null;
+  private static activeAccount: WalletAccount | null = null;
 
   static async getAvailableWallets(): Promise<WalletOption[]> {
     const results: WalletOption[] = [];
@@ -295,13 +296,15 @@ export class WalletManager {
     const connection = await adapter.connect();
     this.activeAdapter = adapter;
 
-    return {
+    this.activeAccount = {
       address: connection.address,
       shortAddress: shortenAddress(connection.address),
       network: connection.network,
       isTestnet: connection.isTestnet,
       type: adapter.id,
     };
+
+    return this.activeAccount;
   }
 
   static async signTransaction(xdr: string, opts?: { networkPassphrase?: string }): Promise<string> {
@@ -315,10 +318,19 @@ export class WalletManager {
     if (this.activeAdapter) {
       await this.activeAdapter.disconnect();
       this.activeAdapter = null;
+      this.activeAccount = null;
     }
   }
 
   static getActiveWalletType(): WalletType | null {
     return this.activeAdapter ? this.activeAdapter.id : null;
+  }
+
+  static getActiveAccount(): WalletAccount | null {
+    return this.activeAccount;
+  }
+
+  static isConnected(): boolean {
+    return Boolean(this.activeAccount);
   }
 }
