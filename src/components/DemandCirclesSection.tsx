@@ -104,33 +104,51 @@ export const DemandCirclesSection: React.FC<DemandCirclesSectionProps> = ({
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
               <span style={{ fontWeight: 700, fontSize: '1rem', color: '#fff' }}>
-                Soroban DemandCircleRegistry
+                Soroban DemandCircleRegistry & BazaarDealEngine
               </span>
-              <span className="badge badge-success">Protocol 22 Active</span>
+              <span className="badge badge-success">Protocol 22 Live</span>
               <span className="badge badge-testnet">Stellar Testnet</span>
+              <span className="badge badge-primary">Cross-Contract Linked</span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.25rem' }}>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Contract ID:</span>
-              <code
-                style={{
-                  fontFamily: 'monospace',
-                  fontSize: '0.78rem',
-                  color: 'var(--accent-secondary)',
-                  background: 'rgba(0,0,0,0.3)',
-                  padding: '2px 6px',
-                  borderRadius: '4px',
-                }}
-              >
-                {contractConfig.contractId}
-              </code>
-              <button
-                type="button"
-                onClick={handleCopyContract}
-                style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}
-                title="Copy Contract Address"
-              >
-                {copiedContract ? <Check size={12} color="var(--success)" /> : <Copy size={12} />}
-              </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '0.35rem', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Registry:</span>
+                <code
+                  style={{
+                    fontFamily: 'monospace',
+                    fontSize: '0.75rem',
+                    color: 'var(--accent-secondary)',
+                    background: 'rgba(0,0,0,0.3)',
+                    padding: '2px 6px',
+                    borderRadius: '4px',
+                  }}
+                >
+                  {contractConfig.contractId.slice(0, 10)}...{contractConfig.contractId.slice(-6)}
+                </code>
+                <button
+                  type="button"
+                  onClick={handleCopyContract}
+                  style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}
+                  title="Copy Contract Address"
+                >
+                  {copiedContract ? <Check size={12} color="var(--success)" /> : <Copy size={12} />}
+                </button>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Deal Engine:</span>
+                <code
+                  style={{
+                    fontFamily: 'monospace',
+                    fontSize: '0.75rem',
+                    color: 'var(--accent-primary-light)',
+                    background: 'rgba(0,0,0,0.3)',
+                    padding: '2px 6px',
+                    borderRadius: '4px',
+                  }}
+                >
+                  {(contractConfig.dealEngine?.contractId || contractConfig.contractId).slice(0, 10)}...{(contractConfig.dealEngine?.contractId || contractConfig.contractId).slice(-6)}
+                </code>
+              </div>
             </div>
           </div>
         </div>
