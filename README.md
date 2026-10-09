@@ -1,6 +1,7 @@
 # Stellar Bazaar Frontend (`stellar-bazaar-frontend`)
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Live DApp](https://img.shields.io/badge/Live%20DApp-stellar--bazaar--dapp.netlify.app-00C7B7.svg)](https://stellar-bazaar-dapp.netlify.app)
 [![React](https://img.shields.io/badge/React-18-blue.svg)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9+-blue.svg)](https://www.typescriptlang.org)
 [![Vite](https://img.shields.io/badge/Vite-6-purple.svg)](https://vitejs.dev)
@@ -8,7 +9,9 @@
 [![Soroban](https://img.shields.io/badge/Soroban-Protocol_22-green.svg)](https://soroban.stellar.org)
 [![CI](https://img.shields.io/badge/CI-Passing-brightgreen.svg)](https://github.com/Stellar-Bazaar/stellar-bazaar-frontend/actions)
 
-The complete, mobile-responsive decentralized web application for **Stellar Bazaar** — a demand-driven marketplace where buyers aggregate purchasing demand, sellers submit competing quotes, and Soroban smart contracts enforce custody, commercial rules, quorum qualification, escrow settlements, and verifiable reputation.
+> **Live Production Deployment**: [https://stellar-bazaar-dapp.netlify.app](https://stellar-bazaar-dapp.netlify.app)
+
+The complete, responsive decentralized application for **Stellar Bazaar** — a demand-driven marketplace where buyers aggregate purchasing demand, sellers submit competing quotes, and Soroban smart contracts enforce custody, commercial rules, quorum qualification, escrow settlements, and verifiable reputation.
 
 ---
 
@@ -121,3 +124,12 @@ Open `http://localhost:3000` in your browser.
 pnpm run build
 ```
 Outputs optimized static assets to `dist/`.
+
+---
+
+## Security & Governance
+
+- [Security Policy & Threat Model](SECURITY.md)
+- [Code of Conduct](CODE_OF_CONDUCT.md)
+- [Contributor Guidelines](CONTRIBUTING.md)
+- [MIT License](LICENSE)
