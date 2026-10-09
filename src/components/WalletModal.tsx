@@ -1,35 +1,70 @@
 import React, { useState, useEffect } from 'react';
-import { X, Wallet, ShieldCheck, Zap, AlertTriangle, ExternalLink } from 'lucide-react';
-import { FreighterWalletService } from '../services/freighter-wallet';
+import {
+  X,
+  Wallet,
+  ShieldCheck,
+  Zap,
+  Globe,
+  Layers,
+  ExternalLink,
+  CheckCircle,
+  AlertCircle,
+  Cpu,
+} from 'lucide-react';
+import { WalletType, WalletOption } from '../types/wallet';
+import { WalletManager } from '../services/wallet-manager';
 
 interface WalletModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConnectFreighter: () => Promise<void>;
-  onConnectCompanion: () => Promise<void>;
+  onSelectWallet: (type: WalletType) => Promise<void>;
   isConnecting: boolean;
+  activeWalletType: WalletType | null;
   errorMessage: string | null;
 }
 
 export const WalletModal: React.FC<WalletModalProps> = ({
   isOpen,
   onClose,
-  onConnectFreighter,
-  onConnectCompanion,
+  onSelectWallet,
   isConnecting,
+  activeWalletType,
   errorMessage,
 }) => {
-  const [freighterAvailable, setFreighterAvailable] = useState<boolean | null>(null);
+  const [wallets, setWallets] = useState<WalletOption[]>([]);
+  const [pendingWallet, setPendingWallet] = useState<WalletType | null>(null);
 
   useEffect(() => {
     if (isOpen) {
-      FreighterWalletService.isAvailable().then((res) => {
-        setFreighterAvailable(res);
-      });
+      WalletManager.getAvailableWallets().then(setWallets);
     }
   }, [isOpen]);
 
   if (!isOpen) return null;
+
+  const handleWalletClick = async (type: WalletType) => {
+    setPendingWallet(type);
+    try {
+      await onSelectWallet(type);
+    } finally {
+      setPendingWallet(null);
+    }
+  };
+
+  const getWalletIcon = (type: WalletType) => {
+    switch (type) {
+      case 'FREIGHTER':
+        return <ShieldCheck size={22} color="var(--accent-primary-light)" />;
+      case 'XBULL':
+        return <Layers size={22} color="#f97316" />;
+      case 'ALBEDO':
+        return <Globe size={22} color="#06b6d4" />;
+      case 'HANA':
+        return <Cpu size={22} color="#a855f7" />;
+      case 'COMPANION':
+        return <Zap size={22} color="#10b981" />;
+    }
+  };
 
   return (
     <div
@@ -37,180 +72,269 @@ export const WalletModal: React.FC<WalletModalProps> = ({
         position: 'fixed',
         inset: 0,
         zIndex: 100,
-        backgroundColor: 'rgba(0, 0, 0, 0.75)',
+        backgroundColor: 'rgba(0, 0, 0, 0.78)',
         backdropFilter: 'blur(8px)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '1.5rem',
+        padding: '1.25rem',
       }}
       onClick={onClose}
     >
       <div
         className="glass-card"
         style={{
-          maxWidth: '460px',
+          maxWidth: '520px',
           width: '100%',
-          backgroundColor: '#121629',
-          border: '1px solid rgba(255, 255, 255, 0.12)',
+          backgroundColor: '#0f1324',
+          border: '1px solid rgba(255, 255, 255, 0.14)',
           position: 'relative',
+          maxHeight: '90vh',
+          display: 'flex',
+          flexDirection: 'column',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7)',
         }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            paddingBottom: '1rem',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+            marginBottom: '1rem',
+          }}
+        >
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-            <Wallet size={22} color="var(--accent-primary-light)" />
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 700 }}>Connect Stellar Wallet</h2>
+            <div
+              style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: '8px',
+                background: 'rgba(99, 102, 241, 0.15)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                border: '1px solid rgba(99, 102, 241, 0.3)',
+              }}
+            >
+              <Wallet size={20} color="var(--accent-primary-light)" />
+            </div>
+            <div>
+              <h2 style={{ fontSize: '1.2rem', fontWeight: 700, margin: 0 }}>Connect Stellar Wallet</h2>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                Multi-wallet selection for Stellar Testnet
+              </span>
+            </div>
           </div>
           <button
             type="button"
             onClick={onClose}
+            aria-label="Close modal"
             style={{
-              background: 'transparent',
+              background: 'rgba(255, 255, 255, 0.05)',
               border: 'none',
+              borderRadius: '6px',
               color: 'var(--text-muted)',
               cursor: 'pointer',
-              padding: '0.35rem',
+              padding: '0.4rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'background 0.2s',
             }}
           >
-            <X size={20} />
+            <X size={18} />
           </button>
         </div>
 
-        <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
-          Connect your Stellar Testnet wallet to authorize transactions, verify real balances, and participate in Demand Circles.
-        </p>
-
+        {/* Error Notification */}
         {errorMessage && (
           <div
             id="wallet-modal-error"
             style={{
-              background: 'rgba(239, 68, 68, 0.15)',
-              border: '1px solid rgba(239, 68, 68, 0.3)',
+              background: 'rgba(239, 68, 68, 0.14)',
+              border: '1px solid rgba(239, 68, 68, 0.35)',
               borderRadius: 'var(--radius-md)',
               padding: '0.85rem',
-              marginBottom: '1.25rem',
+              marginBottom: '1rem',
               color: '#fca5a5',
               fontSize: '0.825rem',
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: '0.5rem',
             }}
           >
-            {errorMessage}
+            <AlertCircle size={16} style={{ flexShrink: 0, marginTop: '2px' }} />
+            <div>
+              <strong>Wallet Connection Error:</strong>
+              <div style={{ marginTop: '2px' }}>{errorMessage}</div>
+            </div>
           </div>
         )}
 
-        {/* Options */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {/* Option 1: Freighter Extension */}
-          <div
-            style={{
-              border: '1px solid var(--border-subtle)',
-              borderRadius: 'var(--radius-md)',
-              padding: '1.25rem',
-              background: 'rgba(255, 255, 255, 0.02)',
-              transition: 'border-color 0.2s',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                <ShieldCheck size={20} color="var(--accent-primary-light)" />
-                <span style={{ fontWeight: 700, fontSize: '1rem' }}>Freighter Wallet</span>
-              </div>
-              <span className="badge badge-testnet">Official Extension</span>
-            </div>
+        {/* Wallet Options List */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.75rem',
+            overflowY: 'auto',
+            paddingRight: '0.25rem',
+          }}
+        >
+          {wallets.map((wallet) => {
+            const isCurrentActive = activeWalletType === wallet.id;
+            const isCurrentPending = pendingWallet === wallet.id && isConnecting;
 
-            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
-              The official Stellar browser extension. Signs transactions securely in your browser.
-            </p>
-
-            {freighterAvailable === false ? (
+            return (
               <div
+                key={wallet.id}
+                id={`wallet-option-${wallet.id.toLowerCase()}`}
                 style={{
-                  background: 'rgba(245, 158, 11, 0.12)',
-                  border: '1px solid rgba(245, 158, 11, 0.25)',
-                  borderRadius: 'var(--radius-sm)',
-                  padding: '0.75rem',
-                  marginBottom: '0.75rem',
+                  border: isCurrentActive
+                    ? '1px solid var(--accent-primary)'
+                    : '1px solid rgba(255, 255, 255, 0.09)',
+                  borderRadius: 'var(--radius-md)',
+                  padding: '1rem',
+                  background: isCurrentActive
+                    ? 'rgba(99, 102, 241, 0.08)'
+                    : 'rgba(255, 255, 255, 0.02)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: '0.75rem',
+                  transition: 'all 0.2s ease',
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: '#fbbf24', fontSize: '0.8rem', fontWeight: 600 }}>
-                  <AlertTriangle size={14} />
-                  <span>Freighter extension not detected</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', flex: 1 }}>
+                  <div
+                    style={{
+                      width: '42px',
+                      height: '42px',
+                      borderRadius: '10px',
+                      background: 'rgba(255, 255, 255, 0.04)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      border: '1px solid rgba(255, 255, 255, 0.08)',
+                      flexShrink: 0,
+                    }}
+                  >
+                    {getWalletIcon(wallet.id)}
+                  </div>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <span style={{ fontWeight: 700, fontSize: '0.95rem' }}>{wallet.name}</span>
+                      {wallet.badge && (
+                        <span
+                          className={`badge ${
+                            wallet.id === 'FREIGHTER'
+                              ? 'badge-primary'
+                              : wallet.id === 'COMPANION'
+                              ? 'badge-success'
+                              : 'badge-testnet'
+                          }`}
+                          style={{ fontSize: '0.68rem', padding: '0.15rem 0.45rem' }}
+                        >
+                          {wallet.badge}
+                        </span>
+                      )}
+                    </div>
+                    <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', margin: '0.2rem 0 0 0' }}>
+                      {wallet.description}
+                    </p>
+
+                    {!wallet.isAvailable && wallet.installUrl && (
+                      <div style={{ marginTop: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                        <span style={{ fontSize: '0.72rem', color: '#fbbf24' }}>Not detected in browser</span>
+                        <a
+                          href={wallet.installUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            fontSize: '0.72rem',
+                            color: 'var(--accent-primary-light)',
+                            textDecoration: 'underline',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '2px',
+                          }}
+                        >
+                          <span>Install</span>
+                          <ExternalLink size={10} />
+                        </a>
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <p style={{ fontSize: '0.75rem', color: '#fde68a', marginTop: '0.25rem' }}>
-                  Please install Freighter from the Chrome / Firefox web store.
-                </p>
-                <a
-                  href="https://www.freighter.app"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-secondary"
-                  style={{ marginTop: '0.5rem', width: '100%', fontSize: '0.75rem', padding: '0.4rem' }}
-                >
-                  <span>Install Freighter Wallet</span>
-                  <ExternalLink size={12} />
-                </a>
+
+                {/* Action button */}
+                <div>
+                  {isCurrentActive ? (
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.35rem',
+                        color: 'var(--success)',
+                        fontSize: '0.8rem',
+                        fontWeight: 600,
+                        padding: '0.5rem 0.85rem',
+                        background: 'rgba(16, 185, 129, 0.1)',
+                        borderRadius: 'var(--radius-sm)',
+                        border: '1px solid rgba(16, 185, 129, 0.2)',
+                      }}
+                    >
+                      <CheckCircle size={14} />
+                      <span>Connected</span>
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      id={`btn-connect-${wallet.id.toLowerCase()}`}
+                      onClick={() => handleWalletClick(wallet.id)}
+                      disabled={isConnecting}
+                      className={wallet.id === 'FREIGHTER' ? 'btn btn-primary' : 'btn btn-secondary'}
+                      style={{
+                        padding: '0.45rem 0.95rem',
+                        fontSize: '0.825rem',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {isCurrentPending ? (
+                        <>
+                          <span className="spinner" style={{ width: '12px', height: '12px' }} />
+                          <span>Connecting...</span>
+                        </>
+                      ) : (
+                        <span>Connect</span>
+                      )}
+                    </button>
+                  )}
+                </div>
               </div>
-            ) : null}
+            );
+          })}
+        </div>
 
-            <button
-              type="button"
-              id="btn-modal-connect-freighter"
-              onClick={onConnectFreighter}
-              disabled={isConnecting}
-              className="btn btn-primary"
-              style={{ width: '100%' }}
-            >
-              {isConnecting ? (
-                <>
-                  <span className="spinner" />
-                  <span>Connecting Freighter...</span>
-                </>
-              ) : (
-                <span>Connect via Freighter</span>
-              )}
-            </button>
-          </div>
-
-          {/* Option 2: Testnet Companion / Sandbox preview */}
-          <div
-            style={{
-              border: '1px solid var(--border-subtle)',
-              borderRadius: 'var(--radius-md)',
-              padding: '1.25rem',
-              background: 'rgba(255, 255, 255, 0.02)',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                <Zap size={20} color="var(--accent-secondary)" />
-                <span style={{ fontWeight: 700, fontSize: '1rem' }}>Testnet Companion Mode</span>
-              </div>
-              <span className="badge badge-success">Zero-Friction</span>
-            </div>
-
-            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
-              Generates a real Stellar Testnet keypair funded by Friendbot. Submits genuine on-chain Testnet transactions without requiring the extension.
-            </p>
-
-            <button
-              type="button"
-              id="btn-modal-connect-companion"
-              onClick={onConnectCompanion}
-              disabled={isConnecting}
-              className="btn btn-secondary"
-              style={{ width: '100%', borderColor: 'rgba(6, 182, 212, 0.4)', color: 'var(--accent-secondary)' }}
-            >
-              {isConnecting ? (
-                <>
-                  <span className="spinner" />
-                  <span>Initializing Testnet Companion...</span>
-                </>
-              ) : (
-                <span>Use Testnet Companion Signer</span>
-              )}
-            </button>
-          </div>
+        {/* Footer info */}
+        <div
+          style={{
+            marginTop: '1.25rem',
+            paddingTop: '0.75rem',
+            borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            fontSize: '0.75rem',
+            color: 'var(--text-muted)',
+          }}
+        >
+          <span>Target Network: <strong>Stellar Testnet</strong></span>
+          <span>Soroban Smart Contracts Ready</span>
         </div>
       </div>
     </div>

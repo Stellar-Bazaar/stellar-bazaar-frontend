@@ -1,6 +1,16 @@
 export type WalletStatus = 'DISCONNECTED' | 'CONNECTING' | 'CONNECTED' | 'ERROR';
 
-export type WalletType = 'FREIGHTER' | 'COMPANION';
+export type WalletType = 'FREIGHTER' | 'XBULL' | 'ALBEDO' | 'HANA' | 'COMPANION';
+
+export interface WalletOption {
+  id: WalletType;
+  name: string;
+  description: string;
+  category: 'EXTENSION' | 'WEB' | 'DEVELOPER';
+  isAvailable: boolean;
+  installUrl?: string;
+  badge?: string;
+}
 
 export interface AssetBalance {
   assetCode: string;
