@@ -33,5 +33,5 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Write-Host "`n============================================================" -ForegroundColor Green
-Write-Host "All 197 frontend tests passed and production build succeeded!" -ForegroundColor Green
+Write-Host "All 226 frontend tests passed and production build succeeded!" -ForegroundColor Green
 Write-Host "============================================================" -ForegroundColor Green
