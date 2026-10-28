@@ -10,7 +10,7 @@ export interface ThemeToggleProps {
 const STORAGE_KEY = 'stellar_bazaar_theme';
 
 export function getInitialTheme(): ThemeMode {
-  if (typeof window === 'undefined') return 'dark';
+  if (typeof localStorage === 'undefined') return 'dark';
   try {
     const saved = localStorage.getItem(STORAGE_KEY) as ThemeMode | null;
     if (saved === 'dark' || saved === 'light' || saved === 'system') {
