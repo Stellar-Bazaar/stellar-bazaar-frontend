@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { FreighterWalletService } from '../services/freighter-wallet';
 import { WalletManager } from '../services/wallet-manager';
+import { CompanionSignerService } from '../services/companion-signer';
 
 describe('Freighter Wallet Service & State Handling', () => {
   it('detects when window.freighter is missing in headless/node environments', async () => {
@@ -34,6 +35,12 @@ describe('WalletManager disconnect and state cleanup', () => {
     expect(WalletManager.isConnected()).toBe(false);
     expect(WalletManager.getActiveAccount()).toBeNull();
     expect(WalletManager.getActiveWalletType()).toBeNull();
+
+    // Mock companion offline so test runs instantaneously without friendbot network latency
+    vi.spyOn(CompanionSignerService, 'getOrCreateCompanion').mockResolvedValue({
+      publicKey: 'GBCOMPANIONTESTNET12345678901234567890123456789012345678',
+      secretKey: 'SB76543210',
+    });
 
     // Connect using COMPANION developer mode
     const account = await WalletManager.connect('COMPANION');
