@@ -127,3 +127,32 @@ export function shortenAddress(address: string, chars = 4): string {
   if (address.length <= chars * 2 + 3) return address;
   return `${address.slice(0, chars)}...${address.slice(-chars)}`;
 }
+
+
+export const STROOPS_PER_XLM = 10_000_000n;
+
+/**
+ * Formats an amount in Stroops (10^-7 XLM) into a human-readable decimal XLM string.
+ * Handles zero, fractional, and large amounts accurately using BigInt.
+ */
+export function formatStroops(stroops: bigint | number | string): string {
+  const bigStroops = typeof stroops === 'bigint' ? stroops : BigInt(Math.floor(Number(stroops) || 0));
+  if (bigStroops === 0n) return '0.0000000';
+  const isNegative = bigStroops < 0n;
+  const abs = isNegative ? -bigStroops : bigStroops;
+  const whole = abs / STROOPS_PER_XLM;
+  const fraction = abs % STROOPS_PER_XLM;
+  const fractionStr = fraction.toString().padStart(7, '0');
+  return `${isNegative ? '-' : ''}${whole.toString()}.${fractionStr}`;
+}
+
+/**
+ * Converts a decimal XLM string into integer Stroops (bigint).
+ */
+export function xlmToStroops(xlmStr: string): bigint {
+  const trimmed = (xlmStr || '0').trim();
+  const [whole = '0', fraction = ''] = trimmed.split('.');
+  const paddedFraction = (fraction + '0000000').slice(0, 7);
+  const total = BigInt(whole) * STROOPS_PER_XLM + BigInt(paddedFraction);
+  return total;
+}
