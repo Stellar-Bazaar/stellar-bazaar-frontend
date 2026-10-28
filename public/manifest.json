@@ -1,0 +1,37 @@
+{
+  "name": "Stellar Bazaar - Cooperative Demand Protocol",
+  "short_name": "Stellar Bazaar",
+  "description": "Decentralized wholesale group buying and escrow clearing powered by Stellar Soroban smart contracts.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f172a",
+  "theme_color": "#06b6d4",
+  "categories": ["finance", "shopping", "productivity"],
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+stellar",
+      "url": "/?sep7=%s"
+    }
+  ]
+}
