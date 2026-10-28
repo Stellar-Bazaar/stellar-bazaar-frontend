@@ -99,6 +99,16 @@ export const CircleDetailModal: React.FC<CircleDetailModalProps> = ({
     }
   }, [circle]);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   if (!circle) return null;
 
   const handleCopy = (text: string, type: 'contract' | 'creator') => {
@@ -247,7 +257,11 @@ export const CircleDetailModal: React.FC<CircleDetailModalProps> = ({
       onClick={onClose}
     >
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="circle-detail-modal-title"
         className="glass-card"
+        onClick={(e) => e.stopPropagation()}
         style={{
           maxWidth: '680px',
           width: '100%',
