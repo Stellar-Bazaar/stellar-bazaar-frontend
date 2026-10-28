@@ -108,4 +108,27 @@ describe('Bazaar Deal Engine Domain & Qualification Logic', () => {
     const isActiveEligible = nowSecs > activeDeal.deadline && activeDeal.status !== 'SETTLED';
     expect(isActiveEligible).toBe(false);
   });
+
+  it('disables refund button when circle is actively in progress before deadline', () => {
+    const nowSecs = Math.floor(Date.now() / 1000);
+
+    const isRefundDisabled = (circle: { status: string; deadline: number }) => {
+      const isExpired = nowSecs > circle.deadline;
+      const isCancelled = circle.status === 'CANCELLED';
+      // Refund is only enabled when circle is explicitly CANCELLED or EXPIRED without settlement
+      return !(isCancelled || isExpired);
+    };
+
+    const activeCircle = { id: 1, status: 'OPEN', deadline: nowSecs + 86400 };
+    expect(isRefundDisabled(activeCircle)).toBe(true);
+
+    const quorumCircle = { id: 2, status: 'QUORUM_REACHED', deadline: nowSecs + 3600 };
+    expect(isRefundDisabled(quorumCircle)).toBe(true);
+
+    const cancelledCircle = { id: 3, status: 'CANCELLED', deadline: nowSecs + 3600 };
+    expect(isRefundDisabled(cancelledCircle)).toBe(false);
+
+    const expiredCircle = { id: 4, status: 'OPEN', deadline: nowSecs - 60 };
+    expect(isRefundDisabled(expiredCircle)).toBe(false);
+  });
 });
