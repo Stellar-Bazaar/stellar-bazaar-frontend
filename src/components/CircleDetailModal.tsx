@@ -275,7 +275,6 @@ export const CircleDetailModal: React.FC<CircleDetailModalProps> = ({
           overflowY: 'auto',
           borderRadius: 'var(--radius-lg)',
         }}
-        onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div

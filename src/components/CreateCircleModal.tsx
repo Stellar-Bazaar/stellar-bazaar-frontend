@@ -307,14 +307,25 @@ export const CreateCircleModal: React.FC<CreateCircleModalProps> = ({
                     fontSize: '0.875rem',
                   }}
                 />
+                {form.target_price_xlm && !isNaN(parseFloat(form.target_price_xlm)) && (
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.35rem' }}>
+                    ≈ {(Math.round(parseFloat(form.target_price_xlm) * 10000000)).toLocaleString()} Stroops
+                  </div>
+                )}
               </div>
 
               <div>
                 <label
                   htmlFor="circle-price"
-                  style={{ display: 'block', fontSize: '0.825rem', fontWeight: 600, marginBottom: '0.35rem' }}
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.825rem', fontWeight: 600, marginBottom: '0.35rem' }}
                 >
-                  Target Unit Price (XLM) *
+                  <span>Target Unit Price (XLM) *</span>
+                  <span
+                    title="1 XLM = 10,000,000 Stroops. Soroban stores prices in Stroops with 7 decimal precision."
+                    style={{ fontSize: '0.75rem', color: 'var(--accent-secondary)', cursor: 'help', fontWeight: 400 }}
+                  >
+                    ℹ️ 1 XLM = 10⁷ Stroops
+                  </span>
                 </label>
                 <input
                   id="circle-price"
