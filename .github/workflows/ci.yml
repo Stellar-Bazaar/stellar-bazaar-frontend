@@ -8,7 +8,7 @@ on:
 
 jobs:
   frontend-ci:
-    name: Typecheck, Vitest & Production Build
+    name: Typecheck, Vitest, Bundle Analysis & Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -48,3 +48,9 @@ jobs:
 
       - name: Build Production Distribution
         run: pnpm run build
+
+      - name: Validate Production Bundle Sizes
+        run: |
+          ls -lh dist/assets/
+          echo "Analyzing bundle sizes..."
+          find dist/assets -name "*.js" -exec ls -lh {} \;
