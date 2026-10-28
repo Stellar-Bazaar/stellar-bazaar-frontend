@@ -12,12 +12,12 @@ describe('StellarBrandHeader', () => {
     const handleConnect = vi.fn();
     const element = React.createElement(StellarBrandHeader, {
       publicKey: null,
-      network: 'Testnet',
+      network: 'testnet',
       onConnectWallet: handleConnect,
     });
 
     expect(element.props.publicKey).toBeNull();
-    expect(element.props.network).toBe('Testnet');
+    expect(element.props.network).toBe('testnet');
     expect(element.props.onConnectWallet).toBe(handleConnect);
   });
 
@@ -28,14 +28,14 @@ describe('StellarBrandHeader', () => {
 
     const element = React.createElement(StellarBrandHeader, {
       publicKey: testKey,
-      network: 'Futurenet',
+      network: 'futurenet',
       onNetworkChange: handleNetworkChange,
       onDisconnectWallet: handleDisconnect,
       xlmBalance: '4,520.50',
     });
 
     expect(element.props.publicKey).toBe(testKey);
-    expect(element.props.network).toBe('Futurenet');
+    expect(element.props.network).toBe('futurenet');
     expect(element.props.xlmBalance).toBe('4,520.50');
   });
 });

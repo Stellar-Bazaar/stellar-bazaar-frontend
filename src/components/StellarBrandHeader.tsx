@@ -1,12 +1,12 @@
 import React from 'react';
-import { NetworkSelector } from './NetworkSelector';
+import { NetworkSelector, NetworkId, NetworkProfile } from './NetworkSelector';
 import { ThemeToggle } from './ThemeToggle';
 import { KeyboardShortcutBadge } from './KeyboardShortcutBadge';
 
 export interface StellarBrandHeaderProps {
   publicKey?: string | null;
-  network?: string;
-  onNetworkChange?: (network: string) => void;
+  network?: NetworkId;
+  onNetworkChange?: (network: NetworkId) => void;
   onConnectWallet?: () => void;
   onDisconnectWallet?: () => void;
   onOpenSearch?: () => void;
@@ -15,7 +15,7 @@ export interface StellarBrandHeaderProps {
 
 export const StellarBrandHeader: React.FC<StellarBrandHeaderProps> = ({
   publicKey,
-  network = 'Testnet',
+  network = 'testnet',
   onNetworkChange,
   onConnectWallet,
   onDisconnectWallet,
@@ -77,8 +77,12 @@ export const StellarBrandHeader: React.FC<StellarBrandHeaderProps> = ({
         <div className="flex items-center space-x-3">
           {/* Network Selector */}
           <NetworkSelector
-            currentNetwork={network}
-            onSelectNetwork={onNetworkChange || (() => {})}
+            activeNetwork={network}
+            onChangeNetwork={(profile: NetworkProfile) => {
+              if (onNetworkChange) {
+                onNetworkChange(profile.id);
+              }
+            }}
           />
 
           {/* Theme Toggle */}

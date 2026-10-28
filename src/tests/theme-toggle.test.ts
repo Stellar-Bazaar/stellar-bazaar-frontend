@@ -4,7 +4,6 @@ import {
   ThemeToggle,
   getInitialTheme,
   applyTheme,
-  ThemeMode,
 } from '../components/ThemeToggle';
 
 describe('ThemeToggle & utilities', () => {
