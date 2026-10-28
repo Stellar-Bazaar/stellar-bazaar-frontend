@@ -156,3 +156,26 @@ export function xlmToStroops(xlmStr: string): bigint {
   const total = BigInt(whole) * STROOPS_PER_XLM + BigInt(paddedFraction);
   return total;
 }
+
+
+/**
+ * Validates seller quote lead time in days.
+ * Must be a positive integer between 1 and 365 days.
+ */
+export function validateLeadTimeDays(leadTimeDays: number | string): {
+  isValid: boolean;
+  error?: string;
+  parsedDays?: number;
+} {
+  const num = typeof leadTimeDays === 'number' ? leadTimeDays : parseInt(String(leadTimeDays).trim(), 10);
+  if (isNaN(num)) {
+    return { isValid: false, error: 'Lead time must be a valid integer.' };
+  }
+  if (num <= 0) {
+    return { isValid: false, error: 'Lead time must be strictly greater than 0 days.' };
+  }
+  if (num > 365) {
+    return { isValid: false, error: 'Lead time cannot exceed 365 days.' };
+  }
+  return { isValid: true, parsedDays: num };
+}

@@ -5,6 +5,7 @@ import {
   validateMemo,
   validatePaymentForm,
   shortenAddress,
+  validateLeadTimeDays,
 } from '../services/validation';
 
 describe('Stellar Address Validation', () => {
@@ -111,5 +112,34 @@ describe('Payment Form Combined Validation', () => {
 
     expect(isValid).toBe(false);
     expect(errors.destinationAddress).toContain('cannot be your own wallet address');
+  });
+});
+
+
+describe('Seller Quote Lead Time Validation', () => {
+  it('accepts valid positive integer lead times', () => {
+    expect(validateLeadTimeDays(1).isValid).toBe(true);
+    expect(validateLeadTimeDays(7).isValid).toBe(true);
+    expect(validateLeadTimeDays(30).isValid).toBe(true);
+    expect(validateLeadTimeDays('14').isValid).toBe(true);
+  });
+
+  it('rejects zero and negative lead times', () => {
+    const resZero = validateLeadTimeDays(0);
+    expect(resZero.isValid).toBe(false);
+    expect(resZero.error).toContain('strictly greater than 0 days');
+
+    const resNegative = validateLeadTimeDays(-5);
+    expect(resNegative.isValid).toBe(false);
+    expect(resNegative.error).toContain('strictly greater than 0 days');
+
+    const resNegativeStr = validateLeadTimeDays('-10');
+    expect(resNegativeStr.isValid).toBe(false);
+  });
+
+  it('rejects lead times exceeding 365 days', () => {
+    const resOver = validateLeadTimeDays(366);
+    expect(resOver.isValid).toBe(false);
+    expect(resOver.error).toContain('cannot exceed 365 days');
   });
 });
