@@ -1,9 +1,9 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { FreighterWalletService } from '../services/freighter-wallet';
+import { WalletManager } from '../services/wallet-manager';
 
 describe('Freighter Wallet Service & State Handling', () => {
   it('detects when window.freighter is missing in headless/node environments', async () => {
-    // In node/vitest, window is either not present or has no freighter extension installed
     const isAvail = await FreighterWalletService.isAvailable();
     expect(typeof isAvail).toBe('boolean');
   });
@@ -18,10 +18,41 @@ describe('Freighter Wallet Service & State Handling', () => {
 
   it('handles user denial or rejection during connection', async () => {
     vi.spyOn(FreighterWalletService, 'isAvailable').mockResolvedValue(true);
-    // Mock rejected connect
     const rejectedError = new Error('User denied access to account');
     vi.spyOn(FreighterWalletService, 'connect').mockRejectedValue(rejectedError);
 
     await expect(FreighterWalletService.connect()).rejects.toThrow('User denied access');
+  });
+});
+
+describe('WalletManager disconnect and state cleanup', () => {
+  beforeEach(async () => {
+    await WalletManager.disconnect();
+  });
+
+  it('successfully cleans up active wallet account and adapter upon disconnect', async () => {
+    expect(WalletManager.isConnected()).toBe(false);
+    expect(WalletManager.getActiveAccount()).toBeNull();
+    expect(WalletManager.getActiveWalletType()).toBeNull();
+
+    // Connect using COMPANION developer mode
+    const account = await WalletManager.connect('COMPANION');
+    expect(account).toBeDefined();
+    expect(WalletManager.isConnected()).toBe(true);
+    expect(WalletManager.getActiveWalletType()).toBe('COMPANION');
+    expect(WalletManager.getActiveAccount()?.address).toBe(account.address);
+
+    // Disconnect
+    await WalletManager.disconnect();
+    expect(WalletManager.isConnected()).toBe(false);
+    expect(WalletManager.getActiveAccount()).toBeNull();
+    expect(WalletManager.getActiveWalletType()).toBeNull();
+  });
+
+  it('throws error when attempting to sign without active connected wallet', async () => {
+    await WalletManager.disconnect();
+    await expect(WalletManager.signTransaction('AAAA...')).rejects.toThrow(
+      'No active wallet connected'
+    );
   });
 });
