@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Clock,
   PlusCircle,
   RefreshCw,
   ShieldCheck,
@@ -11,6 +10,7 @@ import {
   Check,
 } from 'lucide-react';
 import { OnChainDemandCircle, ContractEventItem } from '../types/contract';
+import { DemandCircleCard } from './DemandCircleCard';
 import { SorobanContractService } from '../services/soroban-contract';
 
 interface DemandCirclesSectionProps {
@@ -24,7 +24,7 @@ interface DemandCirclesSectionProps {
 export const DemandCirclesSection: React.FC<DemandCirclesSectionProps> = ({
   onOpenCreateCircle,
   onSelectCircleDetails,
-  onSelectCircleForPayment,
+  onSelectCircleForPayment: _onSelectCircleForPayment,
   walletConnected,
   refreshTrigger,
 }) => {
@@ -33,6 +33,25 @@ export const DemandCirclesSection: React.FC<DemandCirclesSectionProps> = ({
   const [isLoading, setIsLoading] = useState(true);
   const [isSyncingEvents, setIsSyncingEvents] = useState(false);
   const [copiedContract, setCopiedContract] = useState(false);
+  const [filter, setFilter] = useState<string>(() => {
+    try {
+      return localStorage.getItem('stellar_bazaar_filter') || 'ALL';
+    } catch {
+      return 'ALL';
+    }
+  });
+
+  const handleFilterChange = (newFilter: string) => {
+    setFilter(newFilter);
+    try {
+      localStorage.setItem('stellar_bazaar_filter', newFilter);
+    } catch {}
+  };
+
+  const filteredCircles = circles.filter((c) => {
+    if (filter === 'ALL') return true;
+    return (c.status as string) === filter;
+  });
 
   const contractConfig = SorobanContractService.getConfig();
 
@@ -200,6 +219,30 @@ export const DemandCirclesSection: React.FC<DemandCirclesSectionProps> = ({
           </p>
         </div>
 
+        {/* Filter Buttons */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+          {['ALL', 'OPEN', 'CLOSED', 'EXPIRED'].map((tab) => (
+            <button
+              key={tab}
+              type="button"
+              onClick={() => handleFilterChange(tab)}
+              style={{
+                background: filter === tab ? 'var(--accent-primary)' : 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: 'var(--radius-full)',
+                color: filter === tab ? '#fff' : 'var(--text-muted)',
+                padding: '0.35rem 0.85rem',
+                fontSize: '0.78rem',
+                cursor: 'pointer',
+                fontWeight: 600,
+                transition: 'all 0.15s ease',
+              }}
+            >
+              {tab === 'ALL' ? 'All Circles' : tab === 'OPEN' ? 'Open' : tab === 'CLOSED' ? 'Closed' : 'Expired'}
+            </button>
+          ))}
+        </div>
+
         <div>
           <button
             type="button"
@@ -231,7 +274,7 @@ export const DemandCirclesSection: React.FC<DemandCirclesSectionProps> = ({
             Querying Soroban contract storage on Stellar Testnet...
           </p>
         </div>
-      ) : circles.length === 0 ? (
+      ) : filteredCircles.length === 0 ? (
         <div
           style={{
             textAlign: 'center',
@@ -243,19 +286,20 @@ export const DemandCirclesSection: React.FC<DemandCirclesSectionProps> = ({
         >
           <Layers size={40} color="var(--text-muted)" style={{ margin: '0 auto 1rem auto' }} />
           <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '0.5rem' }}>
-            No Demand Circles Found
+            {circles.length === 0 ? 'No Demand Circles Found' : `No ${filter} Circles Found`}
           </h3>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '1.25rem' }}>
-            Be the first buyer to create a demand circle on the deployed registry contract.
+            {circles.length === 0
+              ? 'Be the first buyer to create a demand circle on the deployed registry contract.'
+              : `No circles currently match the ${filter} status filter. Switch to "All Circles" or deploy a new demand circle.`}
           </p>
           <button
             type="button"
-            onClick={onOpenCreateCircle}
-            disabled={!walletConnected}
+            onClick={circles.length === 0 ? onOpenCreateCircle : () => handleFilterChange('ALL')}
             className="btn btn-primary"
           >
             <PlusCircle size={16} />
-            <span>Create First Circle</span>
+            <span>{circles.length === 0 ? 'Create First Circle' : 'View All Circles'}</span>
           </button>
         </div>
       ) : (
@@ -266,135 +310,13 @@ export const DemandCirclesSection: React.FC<DemandCirclesSectionProps> = ({
             gap: '1.25rem',
           }}
         >
-          {circles.map((circle) => {
-            const totalPoolXlm = (
-              circle.target_quantity * parseFloat(circle.target_price_xlm)
-            ).toFixed(2);
-
-            return (
-              <div
-                key={circle.id}
-                id={`circle-card-${circle.id}`}
-                className="glass-card interactive"
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                  padding: '1.25rem',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
-                  cursor: 'pointer',
-                  position: 'relative',
-                }}
-                onClick={() => onSelectCircleDetails(circle)}
-              >
-                <div>
-                  {/* Card Header */}
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      marginBottom: '0.75rem',
-                    }}
-                  >
-                    <span className="badge badge-primary">Circle #{circle.id}</span>
-                    <span
-                      className={`badge ${
-                        circle.status === 'OPEN'
-                          ? 'badge-success'
-                          : circle.status === 'CLOSED'
-                          ? 'badge-testnet'
-                          : 'badge-demo'
-                      }`}
-                    >
-                      {circle.status}
-                    </span>
-                  </div>
-
-                  <h3
-                    style={{
-                      fontSize: '1.05rem',
-                      fontWeight: 700,
-                      marginBottom: '0.5rem',
-                      color: '#fff',
-                      lineHeight: 1.3,
-                    }}
-                  >
-                    {circle.title}
-                  </h3>
-
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
-                    Creator: <span style={{ fontFamily: 'monospace' }}>{circle.creator.slice(0, 8)}...{circle.creator.slice(-6)}</span>
-                  </div>
-
-                  {/* Commercial Metrics Box */}
-                  <div
-                    style={{
-                      background: 'rgba(0, 0, 0, 0.25)',
-                      borderRadius: 'var(--radius-sm)',
-                      padding: '0.75rem',
-                      display: 'grid',
-                      gridTemplateColumns: '1fr 1fr',
-                      gap: '0.5rem',
-                      marginBottom: '1rem',
-                      border: '1px solid rgba(255, 255, 255, 0.05)',
-                    }}
-                  >
-                    <div>
-                      <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Target Price</div>
-                      <div style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--accent-secondary)' }}>
-                        {circle.target_price_xlm} XLM
-                      </div>
-                    </div>
-                    <div>
-                      <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Target Volume</div>
-                      <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#fff' }}>
-                        {circle.target_quantity} units
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Footer with Pool size & Deadline */}
-                <div>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      fontSize: '0.78rem',
-                      color: 'var(--text-muted)',
-                      paddingTop: '0.75rem',
-                      borderTop: '1px solid rgba(255, 255, 255, 0.06)',
-                    }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                      <Clock size={12} />
-                      <span style={{ color: circle.isExpired ? '#f87171' : 'var(--text-muted)' }}>
-                        {circle.isExpired ? 'Expired' : circle.deadlineDate.split(',')[0]}
-                      </span>
-                    </div>
-                    <div style={{ fontWeight: 600, color: '#fff' }}>
-                      Pool: {totalPoolXlm} XLM
-                    </div>
-                  </div>
-                  {onSelectCircleForPayment && (
-                    <button
-                      type="button"
-                      className="btn btn-secondary"
-                      style={{ fontSize: '0.75rem', padding: '0.35rem 0.5rem', marginTop: '0.65rem', width: '100%' }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onSelectCircleForPayment(circle);
-                      }}
-                    >
-                      <span>Commit Payment Escrow</span>
-                    </button>
-                  )}
-                </div>
-              </div>
-            );
-          })}
+          {filteredCircles.map((circle) => (
+            <DemandCircleCard
+              key={circle.id}
+              circle={circle}
+              onSelect={onSelectCircleDetails}
+            />
+          ))}
         </div>
       )}
 
