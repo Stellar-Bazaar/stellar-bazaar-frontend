@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShoppingBag, Wallet, Copy, Check, LogOut } from 'lucide-react';
+import { ShoppingBag, Wallet, Copy, Check, LogOut, Sun, Moon } from 'lucide-react';
 import { WalletAccount, WalletStatus } from '../types/wallet';
 import { shortenAddress } from '../services/validation';
 
@@ -19,6 +19,22 @@ export const Navbar: React.FC<NavbarProps> = ({
   onCopyAddress,
 }) => {
   const [copied, setCopied] = useState(false);
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    try {
+      return (localStorage.getItem('stellar_bazaar_theme') as 'dark' | 'light') || 'dark';
+    } catch {
+      return 'dark';
+    }
+  });
+
+  const toggleTheme = () => {
+    const nextTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(nextTheme);
+    try {
+      localStorage.setItem('stellar_bazaar_theme', nextTheme);
+      document.documentElement.setAttribute('data-theme', nextTheme);
+    } catch {}
+  };
 
   const handleCopy = () => {
     if (walletAccount?.address) {
@@ -84,6 +100,32 @@ export const Navbar: React.FC<NavbarProps> = ({
               Demand-Driven Co-Op Marketplace
             </p>
           </div>
+        </div>
+
+        {/* Theme & Controls */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <button
+            type="button"
+            id="btn-theme-toggle"
+            onClick={toggleTheme}
+            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            style={{
+              background: 'rgba(255, 255, 255, 0.05)',
+              border: '1px solid var(--border-subtle)',
+              borderRadius: 'var(--radius-md)',
+              color: 'var(--text-muted)',
+              cursor: 'pointer',
+              minWidth: '48px',
+              minHeight: '48px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.15s ease',
+            }}
+          >
+            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
         </div>
 
         {/* Wallet controls */}
@@ -159,8 +201,11 @@ export const Navbar: React.FC<NavbarProps> = ({
                   cursor: 'pointer',
                   padding: '0.35rem',
                   borderRadius: '4px',
+                  minWidth: '40px',
+                  minHeight: '40px',
                   display: 'flex',
                   alignItems: 'center',
+                  justifyContent: 'center',
                 }}
               >
                 <LogOut size={16} />
