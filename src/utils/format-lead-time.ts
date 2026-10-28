@@ -33,7 +33,7 @@ export function formatLeadTime(
   } else if (hours > 0) {
     const remainingMinutes = minutes % 60;
     if (remainingMinutes > 0) {
-      readable = `${hours} hr${hours > 1 ? 's' : ''} ${remainingMinutes} min`;
+      readable = `${hours} hr${hours > 1 ? 's' : ''} ${remainingMinutes} min${remainingMinutes > 1 ? 's' : ''}`;
     } else {
       readable = `${hours} hour${hours > 1 ? 's' : ''}`;
     }
