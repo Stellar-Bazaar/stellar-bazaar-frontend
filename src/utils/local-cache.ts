@@ -38,12 +38,18 @@ export function deserializeWithBigInt<T>(json: string): T {
 }
 
 function getStorage(type: 'local' | 'session'): Storage | null {
-  if (typeof window === 'undefined') return null;
   try {
-    return type === 'local' ? window.localStorage : window.sessionStorage;
+    if (type === 'local') {
+      if (typeof localStorage !== 'undefined') return localStorage;
+      if (typeof window !== 'undefined') return window.localStorage;
+    } else {
+      if (typeof sessionStorage !== 'undefined') return sessionStorage;
+      if (typeof window !== 'undefined') return window.sessionStorage;
+    }
   } catch {
     return null;
   }
+  return null;
 }
 
 /**
@@ -62,7 +68,7 @@ export function setCacheItem<T>(
   const envelope: CacheEnvelope<T> = {
     value,
     cachedAt: now,
-    expiresAt: ttlMs !== undefined && ttlMs > 0 ? now + ttlMs : null,
+    expiresAt: ttlMs !== undefined ? now + ttlMs : null,
     version: CACHE_VERSION,
   };
 
