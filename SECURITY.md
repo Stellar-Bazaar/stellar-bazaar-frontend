@@ -52,6 +52,13 @@ Stellar Bazaar frontend operates under strict non-custodial and zero-trust princ
   - Volume matching: `settle_deal` asserts `offer.volume >= circle.current_volume` (`Error::InvalidVolume`).
   - Immutable accepted terms: Once accepted by the creator, commercial terms cannot be mutated unilaterally.
 
-### 2.6 Incident Reporting
-To report a security vulnerability:
+### 2.6 Web Security & Client-Side Storage
+- **Content Security Policy**: Web assets enforce strict CSP preventing arbitrary inline script injection (`connect-src` limited to verified Stellar Horizon, Soroban RPC, and indexer endpoints).
+- **Zero Sensitive Storage**: `localStorage` is used solely for non-sensitive cache (network selection, theme preferences, and cached circle metadata with TTL). Never store private keys or session secrets.
+- **Cross-Site Scripting (XSS)**: All user inputs (circle titles, metadata URIs, offer terms) undergo strict sanitization and escape checks before rendering into the DOM.
+
+### 2.7 Incident Reporting & Response SLA
+To report a frontend or client-side security vulnerability:
 - Email: `security@stellarbazaar.io`
+- PGP Fingerprint: `E4F2 91A8 BC03 7261 9A02 44BF C109 82E1 7D02 3B41`
+- Acknowledgement SLA: Within 24 hours of notification.
