@@ -154,6 +154,7 @@ Outputs optimized static assets to `dist/` with chunk splitting (`vendor-stellar
 
 ## Security & Governance
 
+- [Project Changelog](CHANGELOG.md)
 - [Security Policy & Threat Model](SECURITY.md)
 - [Code of Conduct](CODE_OF_CONDUCT.md)
 - [Contributor Guidelines](CONTRIBUTING.md)
