@@ -49,3 +49,4 @@ describe('OfferCard', () => {
     expect(element.props.isAccepting).toBe(true);
   });
 });
+

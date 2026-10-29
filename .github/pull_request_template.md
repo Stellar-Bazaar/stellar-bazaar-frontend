@@ -28,3 +28,4 @@ Please ensure the following criteria are verified before requesting review:
 - [ ] **Error Remediation**: Soroban contract errors (1–27) display clear human-readable explanations and remediation guidance.
 - [ ] **Theme Consistency**: Supports both dark and light modes cleanly with smooth transitions.
 - [ ] **Unit Tests**: All Vitest test suites pass (`npm test`) with zero regressions.
+

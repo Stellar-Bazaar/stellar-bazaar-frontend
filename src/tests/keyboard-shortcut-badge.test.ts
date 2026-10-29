@@ -27,3 +27,4 @@ describe('KeyboardShortcutBadge', () => {
     expect(element.props.className).toBe('ml-2');
   });
 });
+

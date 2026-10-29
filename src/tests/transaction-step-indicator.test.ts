@@ -46,3 +46,4 @@ describe('TransactionStepIndicator component', () => {
     expect(element.props.error).toBe('Soroban host invocation rejected');
   });
 });
+

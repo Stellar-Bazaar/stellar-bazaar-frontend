@@ -127,3 +127,4 @@ export const TransactionStepIndicator: React.FC<TransactionStepIndicatorProps> =
     </div>
   );
 };
+

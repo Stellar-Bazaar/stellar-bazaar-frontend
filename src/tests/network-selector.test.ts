@@ -25,3 +25,4 @@ describe('NetworkSelector component', () => {
     expect(element.props.activeNetwork).toBe('testnet');
   });
 });
+

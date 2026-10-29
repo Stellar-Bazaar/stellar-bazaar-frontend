@@ -122,3 +122,4 @@ export const InspectionTimer: React.FC<InspectionTimerProps> = ({
     </div>
   );
 };
+

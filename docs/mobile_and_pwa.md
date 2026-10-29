@@ -68,3 +68,4 @@ Web3 applications on mobile frequently experience intermittent cell reception or
 ### Native Installation Prompt (`PwaInstallPrompt`)
 - Captures `beforeinstallprompt` events without showing intrusive browser popups.
 - Offers a discreet floating banner with one-tap installation and 7-day dismissal suppression.
+

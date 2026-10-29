@@ -145,3 +145,4 @@ export const OfferComparisonModal: React.FC<OfferComparisonModalProps> = ({
     </div>
   );
 };
+

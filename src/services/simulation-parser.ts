@@ -103,3 +103,4 @@ export function parseSimulationResponse(
 export function calculateTotalFee(baseFeeStroops: number, resourceFeeStroops: bigint): bigint {
   return BigInt(Math.max(100, baseFeeStroops)) + resourceFeeStroops;
 }
+

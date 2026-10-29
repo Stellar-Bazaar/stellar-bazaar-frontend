@@ -113,3 +113,4 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
     </div>
   );
 };
+

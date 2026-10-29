@@ -12,3 +12,4 @@ describe('useStellarTransaction hook', () => {
     expect(useStellarTransaction.name).toBe('useStellarTransaction');
   });
 });
+

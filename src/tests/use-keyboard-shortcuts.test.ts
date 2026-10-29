@@ -78,3 +78,4 @@ describe('useKeyboardShortcuts & formatShortcutKey', () => {
     });
   });
 });
+

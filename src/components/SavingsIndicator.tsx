@@ -58,3 +58,4 @@ export const SavingsIndicator: React.FC<SavingsIndicatorProps> = ({
     </div>
   );
 };
+

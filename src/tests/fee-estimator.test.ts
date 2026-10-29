@@ -72,3 +72,4 @@ describe('fee-estimator service', () => {
     expect(rec.medium).toBe(FALLBACK_FEE_RECOMMENDATION.medium);
   });
 });
+

@@ -28,3 +28,4 @@ describe('StroopTooltip component', () => {
     expect(element.props.showStroopsPrimary).toBe(true);
   });
 });
+

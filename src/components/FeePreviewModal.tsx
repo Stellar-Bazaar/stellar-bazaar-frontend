@@ -154,3 +154,4 @@ export const FeePreviewModal: React.FC<FeePreviewModalProps> = ({
     </div>
   );
 };
+

@@ -36,3 +36,4 @@ describe('QrCodeModal', () => {
     expect(element.props.qrValue).toBe(uri);
   });
 });
+

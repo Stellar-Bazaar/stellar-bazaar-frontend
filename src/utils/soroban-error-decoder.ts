@@ -271,3 +271,4 @@ export function decodeSorobanError(rawError: unknown): DecodedContractError {
 
   return UNKNOWN_SOROBAN_ERROR;
 }
+

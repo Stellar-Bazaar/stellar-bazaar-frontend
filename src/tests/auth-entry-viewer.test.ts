@@ -24,3 +24,4 @@ describe('AuthEntryViewer component', () => {
     expect(element.props.argumentsPreview?.circle_id).toBe('CIRCLE_42');
   });
 });
+

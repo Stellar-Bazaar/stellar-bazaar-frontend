@@ -82,3 +82,4 @@ export function calculateDiscountBps(
   const bps = (delta * 10_000n) / targetPriceStroops;
   return Number(bps);
 }
+

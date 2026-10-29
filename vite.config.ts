@@ -10,4 +10,15 @@ export default defineConfig({
   define: {
     'process.env': {},
   },
+  build: {
+    chunkSizeWarningLimit: 1200,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-stellar': ['@stellar/stellar-sdk', '@stellar/freighter-api'],
+          'vendor-react': ['react', 'react-dom', 'lucide-react'],
+        },
+      },
+    },
+  },
 });

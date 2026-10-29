@@ -129,3 +129,4 @@ export const OfferCard: React.FC<OfferCardProps> = ({
     </div>
   );
 };
+

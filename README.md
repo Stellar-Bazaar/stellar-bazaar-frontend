@@ -141,7 +141,10 @@ Open `http://localhost:3000` in your browser.
 ```bash
 pnpm run build
 ```
-Outputs optimized static assets to `dist/`.
+Outputs optimized static assets to `dist/` with chunk splitting (`vendor-stellar`, `vendor-react`).
+
+### 6. Production Deployment
+Automated Netlify continuous deployment configured via `netlify.toml` with SPA redirects, asset caching, and hardened Content Security Policies (CSP).
 
 ---
 

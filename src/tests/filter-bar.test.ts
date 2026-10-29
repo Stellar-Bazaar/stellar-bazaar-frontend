@@ -41,3 +41,4 @@ describe('FilterBar', () => {
     expect(element.props.totalCount).toBe(14);
   });
 });
+

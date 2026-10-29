@@ -38,3 +38,4 @@ describe('SlideOverDrawer', () => {
     expect(element.props.footer).toBe(footerElement);
   });
 });
+

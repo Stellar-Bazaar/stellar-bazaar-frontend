@@ -37,3 +37,4 @@ describe('MobileBottomNav', () => {
     expect(element.props.className).toBe('custom-mobile-nav');
   });
 });
+

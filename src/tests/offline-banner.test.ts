@@ -43,3 +43,4 @@ describe('OfflineBanner', () => {
     expect(element.props.className).toBe('test-offline-banner');
   });
 });
+

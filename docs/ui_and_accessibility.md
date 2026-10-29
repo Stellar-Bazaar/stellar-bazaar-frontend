@@ -56,3 +56,4 @@ To support users without browser extensions, Stellar Bazaar includes a zero-depe
 - Encodes SEP-0007 transaction URIs (`web+stellar:tx?xdr=...`) or wallet deep-links.
 - Features one-click clipboard copying with animated confirmation pills.
 - Tested against Freighter Mobile, LOBSTR, and xBull mobile applications.
+

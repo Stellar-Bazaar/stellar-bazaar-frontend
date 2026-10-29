@@ -157,3 +157,4 @@ export const QrCodeModal: React.FC<QrCodeModalProps> = ({
     </div>
   );
 };
+

@@ -69,3 +69,4 @@ export const StroopTooltip: React.FC<StroopTooltipProps> = ({
     </span>
   );
 };
+

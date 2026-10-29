@@ -65,3 +65,4 @@ Once an accepted seller fulfills an order:
    - **Early Confirmation**: Buyers click `Confirm Satisfaction`, triggering immediate release of wholesale payment to the merchant and surplus rebates to buyers.
    - **Auto-Settlement on Expiry**: If no dispute is filed before the ledger timestamp elapses, any participant or keeper can trigger `settle_deal` automatically.
    - **Dispute Mediation**: If goods fail specifications, buyers trigger `dispute_deal`. Funds remain securely locked in escrow until the protocol arbitrator enters a resolution verdict.
+

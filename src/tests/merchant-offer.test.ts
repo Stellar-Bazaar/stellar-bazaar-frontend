@@ -94,3 +94,4 @@ describe('MerchantOffer model & validation', () => {
     expect(calculateDiscountBps(100_000_000n, 120_000_000n)).toBe(0);
   });
 });
+
