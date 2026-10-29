@@ -48,9 +48,13 @@ Before getting started, make sure you have:
 ### Technology Choices
 - **UI Framework**: React 18 with TypeScript in Strict Mode.
 - **Styling**: Vanilla CSS with predefined CSS custom property tokens (`index.css`). We avoid utility CSS frameworks like Tailwind to ensure maximum bespoke design fidelity, sleek dark mode palettes, and fluid micro-animations.
-- **State Management**: React hooks with unified reactive wallet state in `src/context/WalletContext.tsx`.
+### Multi-Asset & Horizon Guidelines
+- Always support native XLM, USDC, and EURC Stellar Asset Contracts (SACs).
+- Verify balance updates using the Horizon RPC balance parser and Friendbot funding tools.
+- Connect to the local indexer API daemon (`http://localhost:8080`) when developing analytics features.
+- Test Progressive Web App (PWA) installation and offline indicators in Chrome DevTools Application tab.
 
-### Design & Usability Principles
+### State Management & Blockchain Principles
 - **Visual Polish**: Use rich glassmorphism, subtle gradients, and reactive hover feedback.
 - **Mobile-First Responsive**: All components must be fully usable across mobile (375px+), tablet, and desktop viewports.
 - **Accessibility & Semantics**: Use semantic HTML tags, accessible button labels, keyboard navigability, and clear visual loading indicators.
