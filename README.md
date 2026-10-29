@@ -1,7 +1,8 @@
 # Stellar Bazaar Frontend (`stellar-bazaar-frontend`)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Live DApp](https://img.shields.io/badge/Live%20DApp-stellar--bazaar--dapp.netlify.app-00C7B7.svg)](https://stellar-bazaar-dapp.netlify.app)
+[![Live DApp](https://img.shields.io/badge/Live%20DApp-GitHub%20Pages-00C7B7.svg)](https://stellar-bazaar.github.io/stellar-bazaar-frontend/)
+[![Netlify Mirror](https://img.shields.io/badge/Netlify-Mirror-00AD9F.svg)](https://stellar-bazaar-dapp.netlify.app)
 [![React](https://img.shields.io/badge/React-18-blue.svg)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9+-blue.svg)](https://www.typescriptlang.org)
 [![Vite](https://img.shields.io/badge/Vite-6-purple.svg)](https://vitejs.dev)
@@ -9,7 +10,8 @@
 [![Soroban](https://img.shields.io/badge/Soroban-Protocol_22-green.svg)](https://soroban.stellar.org)
 [![CI](https://img.shields.io/badge/CI-Passing-brightgreen.svg)](https://github.com/Stellar-Bazaar/stellar-bazaar-frontend/actions)
 
-> **Live Production Deployment**: [https://stellar-bazaar-dapp.netlify.app](https://stellar-bazaar-dapp.netlify.app)
+> **Live Production Deployment**: [https://stellar-bazaar.github.io/stellar-bazaar-frontend/](https://stellar-bazaar.github.io/stellar-bazaar-frontend/)  
+> **Netlify Mirror**: [https://stellar-bazaar-dapp.netlify.app](https://stellar-bazaar-dapp.netlify.app)
 
 The complete, responsive decentralized application for **Stellar Bazaar** — a demand-driven marketplace where buyers aggregate purchasing demand, sellers submit competing quotes, and Soroban smart contracts enforce custody, commercial rules, quorum qualification, escrow settlements, and verifiable reputation.
 
@@ -144,7 +146,9 @@ pnpm run build
 Outputs optimized static assets to `dist/` with chunk splitting (`vendor-stellar`, `vendor-react`).
 
 ### 6. Production Deployment
-Automated Netlify continuous deployment configured via `netlify.toml` with SPA redirects, asset caching, and hardened Content Security Policies (CSP).
+
+- **GitHub Pages (Continuous Deployment)**: Automatically builds and deploys on every push to `main` via `.github/workflows/pages.yml`. Live at [https://stellar-bazaar.github.io/stellar-bazaar-frontend/](https://stellar-bazaar.github.io/stellar-bazaar-frontend/).
+- **Netlify**: Configured via `netlify.toml` with publish directory set to `dist`, SPA rewrite rules (`/* -> /index.html 200`), immutable asset caching, and hardened Content Security Policies (CSP). When manually deploying on Netlify Drop, drag the compiled `dist/` folder.
 
 ---
 
