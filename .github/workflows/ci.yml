@@ -8,16 +8,19 @@ on:
 
 jobs:
   frontend-ci:
-    name: Typecheck, Vitest, Bundle Analysis & Build
+    name: Typecheck, Vitest, Bundle Analysis & Build (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20.x, 22.x]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ matrix.node-version }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
@@ -49,8 +52,19 @@ jobs:
       - name: Build Production Distribution
         run: pnpm run build
 
-      - name: Validate Production Bundle Sizes
+      - name: Validate Production Bundle Sizes & Budget
         run: |
-          ls -lh dist/assets/
           echo "Analyzing bundle sizes..."
-          find dist/assets -name "*.js" -exec ls -lh {} \;
+          ls -lh dist/assets/
+          MAX_CHUNK_BYTES=600000 # 600 KB chunk threshold
+          for chunk in dist/assets/*.js; do
+            if [ -f "$chunk" ]; then
+              SIZE=$(wc -c < "$chunk")
+              NAME=$(basename "$chunk")
+              echo "Chunk $NAME: $SIZE bytes"
+              if [ "$SIZE" -gt "$MAX_CHUNK_BYTES" ]; then
+                echo "Warning: Bundle chunk $NAME ($SIZE bytes) exceeds recommended threshold of $MAX_CHUNK_BYTES bytes"
+              fi
+            fi
+          done
+          test -f dist/index.html && echo "Production index.html generated successfully."
