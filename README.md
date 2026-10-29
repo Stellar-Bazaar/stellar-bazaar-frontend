@@ -27,7 +27,7 @@ The complete, responsive decentralized application for **Stellar Bazaar** — a 
   - `DemandCircleRegistry`: [`CCBYRME7BW3IPB7F64D5A3NQ3N6QHAPO4NO3N3MFAIJJYK5TUMTCMEII`](https://stellar.expert/explorer/testnet/contract/CCBYRME7BW3IPB7F64D5A3NQ3N6QHAPO4NO3N3MFAIJJYK5TUMTCMEII)
   - `BazaarDealEngine`: [`CDCK6A2QB5QTILDWILUQGAUWXI543TK63WN2OKG7WEWHBAMGZ6ESKY4G`](https://stellar.expert/explorer/testnet/contract/CDCK6A2QB5QTILDWILUQGAUWXI543TK63WN2OKG7WEWHBAMGZ6ESKY4G)
   - Network: Stellar Testnet (RPC: `https://soroban-testnet.stellar.org`)
-- **Testing & Quality Assurance**: Vitest unit test suite covering address checksums, Stroop precision, wallet adapters, contract simulation boundaries, quorum evaluation, seller offers, and reputation calculations (**33 passing tests**).
+- **Testing & Quality Assurance**: Vitest unit test suite covering address checksums, Stroop precision, wallet adapters, contract simulation boundaries, quorum evaluation, seller offers, reputation calculations, surplus rebate math, toast notifications, offline cache, and PWA manifest (**226 passing tests across 56 test files**).
 
 ---
 
@@ -38,23 +38,41 @@ The complete, responsive decentralized application for **Stellar Bazaar** — a 
 - Search, filter, and sort across active demand circles.
 - Live progress indicators showing committed volume, target volume, and quorum qualification status.
 - Authoritative on-chain lookup reading directly from Soroban contract storage.
+- Real-time Relational Indexer client integration with fallback to direct RPC.
 
-### 2. Buyer Experience
+### 2. Multi-Asset Stellar Asset Contract (SAC) Support
+- Native support for **XLM**, **USDC**, and **EURC** Stellar Asset Contracts.
+- Lossless integer BigInt stroop arithmetic (7 decimals) preventing precision loss.
+- Account balance card polling Horizon RPC with one-click Testnet Friendbot funding.
+
+### 3. Buyer Experience & Surplus Rebates
 - Multi-wallet connection supporting Freighter, xBull, Albedo, Hana, and Testnet Companion Mode.
 - Create new demand circles with validated commercial rules (target quantity, price ceiling, reservation deadline).
-- Commit demand to escrow: deposit XLM into the contract with non-custodial wallet authorization.
+- Commit demand to escrow: deposit XLM or USDC into the contract with non-custodial wallet authorization.
+- **Surplus Discount Rebates**: When a seller accepts a deal below ceiling price, buyers claim their share of the wholesale discount pool.
 - 100% refund guarantee: claim escrowed funds if a deal expires without reaching quorum or is cancelled.
 
-### 3. Seller Experience & Deal Engine
+### 4. Seller Experience & Deal Engine
 - Browse active demand circles and submit competing quotes (unit price, available volume, lead time in days).
-- Compare competing offers on price, available quantity, lead time, and seller reputation.
+- Compare competing offers with visual highlights on **Best Price** and **Fastest Delivery**.
 - Acceptance of explicit terms by the circle creator.
 - Escrow settlement: release contract-held funds directly to the winning seller upon qualification.
 
-### 4. Verifiable Seller Reputation Model
+### 5. Inspection Windows & Dispute Resolution
+- Real-time visual inspection window countdown timer.
+- Dispute filing banner for buyers during inspection period.
+- Arbitrator resolution support with binding fund partition.
+
+### 6. Verifiable Seller Reputation Model
 - On-chain reputation derived strictly from confirmed transaction outcomes (`get_seller_reputation`).
 - Transparent metrics: completed deals, volume cleared, total XLM settled, and dispute rate.
 - Distinguishes verified blockchain evidence from unverified subjective reviews.
+
+### 7. Modern Web3 UX & PWA
+- Responsive mobile bottom dock (`MobileBottomNav`) and drawer panel.
+- Dark, light, and system theme toggle with storage synchronization.
+- Horizon transaction fee estimator showing CPU instructions, RAM byte consumption, and base fee stroops.
+- Progressive Web App (PWA) with offline detection and `web+stellar` protocol handling.
 
 ---
 
@@ -89,8 +107,8 @@ $ pnpm test
  ✓ src/tests/transaction-result.test.ts (5 tests)
  ✓ src/tests/multi-wallet.test.ts (6 tests)
 
-Test Files  6 passed (6)
-     Tests  33 passed (33)
+Test Files  56 passed (56)
+     Tests  226 passed (226)
   Duration  2.06s
 ```
 
