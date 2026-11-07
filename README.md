@@ -102,16 +102,16 @@ Captured directly from the running application and development tools:
 
 ```bash
 $ pnpm test
- ✓ src/tests/deal-engine.test.ts (5 tests)
- ✓ src/tests/wallet-state.test.ts (3 tests)
- ✓ src/tests/validation.test.ts (10 tests)
- ✓ src/tests/soroban-contract.test.ts (4 tests)
+ ✓ src/tests/deal-engine.test.ts (6 tests)
+ ✓ src/tests/wallet-state.test.ts (6 tests)
+ ✓ src/tests/validation.test.ts (13 tests)
+ ✓ src/tests/soroban-contract.test.ts (5 tests)
  ✓ src/tests/transaction-result.test.ts (5 tests)
  ✓ src/tests/multi-wallet.test.ts (6 tests)
 
 Test Files  56 passed (56)
-     Tests  226 passed (226)
-  Duration  2.06s
+     Tests  228 passed (228)
+  Duration  1.95s
 ```
 
 ---
