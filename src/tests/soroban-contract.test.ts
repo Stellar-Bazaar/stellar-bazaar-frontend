@@ -94,9 +94,10 @@ describe('Soroban Smart Contract Integration', () => {
     await SorobanContractService.settleDeal(1, 2, dummyCaller);
 
     expect(spy).toHaveBeenCalled();
-    expect(spy.mock.calls[0][1]).toBe('settle_deal');
-    expect(spy.mock.calls[0][2].length).toBe(3);
-    expect(spy.mock.calls[0][3]).toBe(dummyCaller);
+    const calls = spy.mock.calls as any[][];
+    expect(calls[0][1]).toBe('settle_deal');
+    expect(calls[0][2].length).toBe(3);
+    expect(calls[0][3]).toBe(dummyCaller);
     spy.mockRestore();
   });
 });
