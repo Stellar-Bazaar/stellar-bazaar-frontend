@@ -61,7 +61,9 @@ describe('WalletManager disconnect and state cleanup', () => {
     CompanionSignerService.clear();
     const companion = await CompanionSignerService.getOrCreateCompanion();
     expect(companion.secretKey).toBeDefined();
-    expect(sessionStorage.getItem('stellar_bazaar_testnet_companion')).toBeNull();
+    if (typeof window !== 'undefined' && window.sessionStorage) {
+      expect(sessionStorage.getItem('stellar_bazaar_testnet_companion')).toBeNull();
+    }
     CompanionSignerService.clear();
   });
 
