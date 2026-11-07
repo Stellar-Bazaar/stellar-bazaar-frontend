@@ -29,7 +29,7 @@ The complete, responsive decentralized application for **Stellar Bazaar** — a 
   - `DemandCircleRegistry`: [`CCBYRME7BW3IPB7F64D5A3NQ3N6QHAPO4NO3N3MFAIJJYK5TUMTCMEII`](https://stellar.expert/explorer/testnet/contract/CCBYRME7BW3IPB7F64D5A3NQ3N6QHAPO4NO3N3MFAIJJYK5TUMTCMEII)
   - `BazaarDealEngine`: [`CDCK6A2QB5QTILDWILUQGAUWXI543TK63WN2OKG7WEWHBAMGZ6ESKY4G`](https://stellar.expert/explorer/testnet/contract/CDCK6A2QB5QTILDWILUQGAUWXI543TK63WN2OKG7WEWHBAMGZ6ESKY4G)
   - Network: Stellar Testnet (RPC: `https://soroban-testnet.stellar.org`)
-- **Testing & Quality Assurance**: Vitest unit test suite covering address checksums, Stroop precision, wallet adapters, contract simulation boundaries, quorum evaluation, seller offers, reputation calculations, surplus rebate math, toast notifications, offline cache, and PWA manifest (**226 passing tests across 56 test files**).
+- **Testing & Quality Assurance**: Vitest unit test suite covering address checksums, Stroop precision, wallet adapters, contract simulation boundaries, quorum evaluation, seller offers, reputation calculations, surplus rebate math, toast notifications, offline cache, and PWA manifest (**228 passing tests across 56 test files**).
 
 ---
 
