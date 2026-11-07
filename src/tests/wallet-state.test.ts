@@ -56,6 +56,15 @@ describe('WalletManager disconnect and state cleanup', () => {
     expect(WalletManager.getActiveWalletType()).toBeNull();
   });
 
+  it('does not store secret keys in sessionStorage for security', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce(new Response(JSON.stringify({})));
+    CompanionSignerService.clear();
+    const companion = await CompanionSignerService.getOrCreateCompanion();
+    expect(companion.secretKey).toBeDefined();
+    expect(sessionStorage.getItem('stellar_bazaar_testnet_companion')).toBeNull();
+    CompanionSignerService.clear();
+  });
+
   it('throws error when attempting to sign without active connected wallet', async () => {
     await WalletManager.disconnect();
     await expect(WalletManager.signTransaction('AAAA...')).rejects.toThrow(

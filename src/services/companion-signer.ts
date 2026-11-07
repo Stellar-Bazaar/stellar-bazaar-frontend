@@ -8,21 +8,16 @@ export interface CompanionAccount {
   secretKey: string;
 }
 
+// Store securely in memory rather than sessionStorage to prevent XSS exposure of private keys
+let inMemoryCompanion: CompanionAccount | null = null;
+
 export class CompanionSignerService {
   /**
    * Retrieves or creates an active Testnet Keypair funded via Friendbot.
    */
   public static async getOrCreateCompanion(): Promise<CompanionAccount> {
-    try {
-      const stored = sessionStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (parsed.publicKey && parsed.secretKey) {
-          return parsed;
-        }
-      }
-    } catch {
-      // ignore
+    if (inMemoryCompanion) {
+      return inMemoryCompanion;
     }
 
     // Generate fresh Keypair
@@ -35,13 +30,7 @@ export class CompanionSignerService {
     // Auto-fund with Friendbot
     await fundWithFriendbot(companion.publicKey);
 
-    // Save to session memory
-    try {
-      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(companion));
-    } catch {
-      // ignore
-    }
-
+    inMemoryCompanion = companion;
     return companion;
   }
 
@@ -56,6 +45,13 @@ export class CompanionSignerService {
   }
 
   public static clear(): void {
-    sessionStorage.removeItem(STORAGE_KEY);
+    inMemoryCompanion = null;
+    try {
+      if (typeof window !== 'undefined' && window.sessionStorage) {
+        sessionStorage.removeItem(STORAGE_KEY);
+      }
+    } catch {
+      // ignore
+    }
   }
 }

@@ -18,7 +18,7 @@
     X-Content-Type-Options = "nosniff"
     X-XSS-Protection = "1; mode=block"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://horizon-testnet.stellar.org https://horizon-futurenet.stellar.org https://soroban-testnet.stellar.org https://rpc-futurenet.stellar.org http://localhost:* ws:; img-src 'self' data: https: blob:;"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://horizon-testnet.stellar.org https://horizon-futurenet.stellar.org https://soroban-testnet.stellar.org https://rpc-futurenet.stellar.org https://friendbot.stellar.org https://friendbot-futurenet.stellar.org http://localhost:* ws:; img-src 'self' data: https: blob:; frame-src 'self' https://albedo.link; frame-ancestors 'none';"
 
 [[headers]]
   for = "/assets/*"

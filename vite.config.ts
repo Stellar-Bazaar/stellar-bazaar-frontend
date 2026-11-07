@@ -15,9 +15,15 @@ export default defineConfig({
     chunkSizeWarningLimit: 1200,
     rollupOptions: {
       output: {
-        manualChunks: {
-          'vendor-stellar': ['@stellar/stellar-sdk', '@stellar/freighter-api'],
-          'vendor-react': ['react', 'react-dom', 'lucide-react'],
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('@stellar/stellar-sdk') || id.includes('@stellar/freighter-api')) {
+              return 'vendor-stellar';
+            }
+            if (id.includes('react') || id.includes('lucide-react')) {
+              return 'vendor-react';
+            }
+          }
         },
       },
     },

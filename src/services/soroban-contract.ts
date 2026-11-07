@@ -521,6 +521,7 @@ export class SorobanContractService {
       this.getDealEngineContractId(),
       'settle_deal',
       [
+        new Address(callerAddress).toScVal(),
         nativeToScVal(BigInt(dealId), { type: 'u64' }),
         nativeToScVal(BigInt(winningOfferId), { type: 'u64' }),
       ],

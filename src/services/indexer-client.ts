@@ -69,25 +69,36 @@ export interface DisputeDTO {
 export class IndexerApiClient {
   private baseUrl: string;
 
-  constructor(baseUrl: string = 'http://localhost:8088') {
+  constructor(
+    baseUrl: string = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_INDEXER_API_URL) ||
+      'http://localhost:8088'
+  ) {
     this.baseUrl = baseUrl.replace(/\/$/, '');
   }
 
-  private async request<T>(path: string): Promise<T> {
-    const resp = await fetch(`${this.baseUrl}${path}`, {
-      headers: {
-        Accept: 'application/json',
-      },
-    });
+  private async request<T>(path: string, timeoutMs: number = 8000): Promise<T> {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
 
-    if (!resp.ok) {
-      if (resp.status === 404) {
-        throw new Error(`NotFound: ${path}`);
+    try {
+      const resp = await fetch(`${this.baseUrl}${path}`, {
+        headers: {
+          Accept: 'application/json',
+        },
+        signal: controller.signal,
+      });
+
+      if (!resp.ok) {
+        if (resp.status === 404) {
+          throw new Error(`NotFound: ${path}`);
+        }
+        throw new Error(`Indexer API request failed (${resp.status}): ${resp.statusText}`);
       }
-      throw new Error(`Indexer API request failed (${resp.status}): ${resp.statusText}`);
-    }
 
-    return resp.json();
+      return await resp.json();
+    } finally {
+      clearTimeout(timer);
+    }
   }
 
   async getHealth(): Promise<IndexerHealthResponse> {

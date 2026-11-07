@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { SorobanContractService, STROOPS_PER_XLM } from '../services/soroban-contract';
 
 describe('Soroban Smart Contract Integration', () => {
@@ -86,5 +86,17 @@ describe('Soroban Smart Contract Integration', () => {
   it('provides an idempotent indexed events list', () => {
     const initial = SorobanContractService.getIndexedEvents();
     expect(Array.isArray(initial)).toBe(true);
+  });
+
+  it('passes caller address as first argument to settle_deal', async () => {
+    const spy = vi.spyOn(SorobanContractService as any, 'executeContractInvocation').mockResolvedValue({ txHash: 'abc' });
+    const dummyCaller = 'GAFAVMHP54H3DRZU7RJPOIV5N7KEYC5F7XFKX3YXMYYZB2VBZBJG5PJZ';
+    await SorobanContractService.settleDeal(1, 2, dummyCaller);
+
+    expect(spy).toHaveBeenCalled();
+    expect(spy.mock.calls[0][1]).toBe('settle_deal');
+    expect(spy.mock.calls[0][2].length).toBe(3);
+    expect(spy.mock.calls[0][3]).toBe(dummyCaller);
+    spy.mockRestore();
   });
 });
