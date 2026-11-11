@@ -1,9 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import React from 'react';
-import {
-  InspectionTimer,
-  formatRemainingTime,
-} from '../components/InspectionTimer';
+import { InspectionTimer, formatRemainingTime } from '../components/InspectionTimer';
 
 describe('InspectionTimer & formatRemainingTime', () => {
   describe('formatRemainingTime', () => {
@@ -52,4 +49,3 @@ describe('InspectionTimer & formatRemainingTime', () => {
     });
   });
 });
-

@@ -32,7 +32,9 @@ export function validateMerchantOffer(
 
   // Seller address validation (Stellar G-address format)
   if (!offer.sellerAddress || !/^G[A-Z0-9]{55}$/.test(offer.sellerAddress)) {
-    errors.push('Seller address must be a valid 56-character Stellar public key (starting with G).');
+    errors.push(
+      'Seller address must be a valid 56-character Stellar public key (starting with G).'
+    );
   }
 
   // Price validation
@@ -54,7 +56,9 @@ export function validateMerchantOffer(
   }
 
   if (circleMaxVolume > 0 && offer.maxVolume && offer.maxVolume > circleMaxVolume * 2) {
-    errors.push(`Maximum supply volume exceeds reasonable circle parameters (limit: ${circleMaxVolume * 2}).`);
+    errors.push(
+      `Maximum supply volume exceeds reasonable circle parameters (limit: ${circleMaxVolume * 2}).`
+    );
   }
 
   // Lead time validation
@@ -82,4 +86,3 @@ export function calculateDiscountBps(
   const bps = (delta * 10_000n) / targetPriceStroops;
   return Number(bps);
 }
-

@@ -70,7 +70,8 @@ export class IndexerApiClient {
   private baseUrl: string;
 
   constructor(
-    baseUrl: string = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_INDEXER_API_URL) ||
+    baseUrl: string = (typeof import.meta !== 'undefined' &&
+      import.meta.env?.VITE_INDEXER_API_URL) ||
       'http://localhost:8088'
   ) {
     this.baseUrl = baseUrl.replace(/\/$/, '');
@@ -121,7 +122,9 @@ export class IndexerApiClient {
   }
 
   async getCommitments(circleId: string): Promise<CommitmentDTO[]> {
-    return this.request<CommitmentDTO[]>(`/api/v1/circles/${encodeURIComponent(circleId)}/commitments`);
+    return this.request<CommitmentDTO[]>(
+      `/api/v1/circles/${encodeURIComponent(circleId)}/commitments`
+    );
   }
 
   async getOffers(circleId: string): Promise<SellerOfferDTO[]> {

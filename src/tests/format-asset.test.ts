@@ -28,9 +28,9 @@ describe('formatAssetAmount utility', () => {
 
   it('handles custom min and max decimals', () => {
     // 1.2345678 XLM
-    expect(
-      formatAssetAmount(12_345_678n, 'XLM', { minDecimals: 4, maxDecimals: 4 })
-    ).toBe('1.2345 XLM');
+    expect(formatAssetAmount(12_345_678n, 'XLM', { minDecimals: 4, maxDecimals: 4 })).toBe(
+      '1.2345 XLM'
+    );
   });
 
   it('safely handles zero, null, and undefined values', () => {

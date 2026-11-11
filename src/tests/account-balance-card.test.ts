@@ -5,8 +5,8 @@ import { AccountBalanceCard, AccountBalanceMap } from '../components/AccountBala
 describe('AccountBalanceCard component', () => {
   const dummyBalances: AccountBalanceMap = {
     XLM: 10_000_000_000n, // 1000 XLM
-    USDC: 250_000_000n,    // 25 USDC
-    EURC: 100_000_000n,    // 10 EURC
+    USDC: 250_000_000n, // 25 USDC
+    EURC: 100_000_000n, // 10 EURC
   };
 
   it('is exported and defined as a React component', () => {
@@ -38,7 +38,9 @@ describe('AccountBalanceCard component', () => {
     });
 
     expect(element).toBeDefined();
-    expect(element.props.publicKey).toBe('GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5');
+    expect(element.props.publicKey).toBe(
+      'GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5'
+    );
     expect(element.props.balances.XLM).toBe(10_000_000_000n);
     expect(element.props.balances.USDC).toBe(250_000_000n);
     expect(element.props.balances.EURC).toBe(100_000_000n);

@@ -43,7 +43,9 @@ describe('SorobanErrorDecoder', () => {
   });
 
   it('parses insufficient balance messages', () => {
-    const decoded = decodeSorobanError('op_underfunded: insufficient balance to cover stroop reserve');
+    const decoded = decodeSorobanError(
+      'op_underfunded: insufficient balance to cover stroop reserve'
+    );
     expect(decoded.code).toBe(101);
     expect(decoded.name).toBe('InsufficientBalance');
   });
@@ -70,4 +72,3 @@ describe('SorobanErrorDecoder', () => {
     }
   });
 });
-

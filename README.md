@@ -36,6 +36,7 @@ The complete, responsive decentralized application for **Stellar Bazaar** — a 
 ## Implemented User Journeys & Capabilities
 
 ### 1. Public Marketplace & Demand Circles
+
 - Home page explaining the collective purchasing model and cost savings.
 - Search, filter, and sort across active demand circles.
 - Live progress indicators showing committed volume, target volume, and quorum qualification status.
@@ -43,11 +44,13 @@ The complete, responsive decentralized application for **Stellar Bazaar** — a 
 - Real-time Relational Indexer client integration with fallback to direct RPC.
 
 ### 2. Multi-Asset Stellar Asset Contract (SAC) Support
+
 - Native support for **XLM**, **USDC**, and **EURC** Stellar Asset Contracts.
 - Lossless integer BigInt stroop arithmetic (7 decimals) preventing precision loss.
 - Account balance card polling Horizon RPC with one-click Testnet Friendbot funding.
 
 ### 3. Buyer Experience & Surplus Rebates
+
 - Multi-wallet connection supporting Freighter, xBull, Albedo, Hana, and Testnet Companion Mode.
 - Create new demand circles with validated commercial rules (target quantity, price ceiling, reservation deadline).
 - Commit demand to escrow: deposit XLM or USDC into the contract with non-custodial wallet authorization.
@@ -55,22 +58,26 @@ The complete, responsive decentralized application for **Stellar Bazaar** — a 
 - 100% refund guarantee: claim escrowed funds if a deal expires without reaching quorum or is cancelled.
 
 ### 4. Seller Experience & Deal Engine
+
 - Browse active demand circles and submit competing quotes (unit price, available volume, lead time in days).
 - Compare competing offers with visual highlights on **Best Price** and **Fastest Delivery**.
 - Acceptance of explicit terms by the circle creator.
 - Escrow settlement: release contract-held funds directly to the winning seller upon qualification.
 
 ### 5. Inspection Windows & Dispute Resolution
+
 - Real-time visual inspection window countdown timer.
 - Dispute filing banner for buyers during inspection period.
 - Arbitrator resolution support with binding fund partition.
 
 ### 6. Verifiable Seller Reputation Model
+
 - On-chain reputation derived strictly from confirmed transaction outcomes (`get_seller_reputation`).
 - Transparent metrics: completed deals, volume cleared, total XLM settled, and dispute rate.
 - Distinguishes verified blockchain evidence from unverified subjective reviews.
 
 ### 7. Modern Web3 UX & PWA
+
 - Responsive mobile bottom dock (`MobileBottomNav`) and drawer panel.
 - Dark, light, and system theme toggle with storage synchronization.
 - Horizon transaction fee estimator showing CPU instructions, RAM byte consumption, and base fee stroops.
@@ -82,19 +89,19 @@ The complete, responsive decentralized application for **Stellar Bazaar** — a 
 
 Captured directly from the running application and development tools:
 
-| # | Feature / Milestone | Screenshot |
-| :-: | :--- | :--- |
-| **01** | **Responsive Desktop Marketplace** | ![Desktop Marketplace](docs/screenshots/01_responsive_desktop_marketplace.png) |
-| **02** | **Responsive Mobile Interface** | ![Mobile Interface](docs/screenshots/02_responsive_mobile_interface.png) |
-| **03** | **Wallet Options & Connected State** | ![Wallet Options](docs/screenshots/03_wallet_options_and_connected.png) |
-| **04** | **Demand Circle Creation & Progress** | ![Demand Circle Creation](docs/screenshots/04_demand_circle_creation_and_progress.png) |
-| **05** | **Competing Seller Offers** | ![Competing Offers](docs/screenshots/05_competing_seller_offers.png) |
-| **06** | **Real Accepted Offer Interaction** | ![Accepted Offer](docs/screenshots/06_real_accepted_offer_interaction.png) |
-| **07** | **Successful Settlement & Escrow Release** | ![Escrow Settlement](docs/screenshots/07_successful_settlement_escrow.png) |
-| **08** | **Failed Deal & Refund Protection Flow** | ![Refund Flow](docs/screenshots/08_failed_deal_and_refund_outcome.png) |
-| **09** | **Deployed Contract & Verifiable Hashes** | ![Contract & Hashes](docs/screenshots/09_deployed_contract_and_tx_hash.png) |
-| **10** | **Running CI/CD Automation Workflow** | ![CI Workflow](docs/screenshots/10_running_ci_workflow.png) |
-| **11** | **Automated Test Suite Output** | ![Test Output](docs/screenshots/11_automated_test_output.png) |
+|   #    | Feature / Milestone                        | Screenshot                                                                             |
+| :----: | :----------------------------------------- | :------------------------------------------------------------------------------------- |
+| **01** | **Responsive Desktop Marketplace**         | ![Desktop Marketplace](docs/screenshots/01_responsive_desktop_marketplace.png)         |
+| **02** | **Responsive Mobile Interface**            | ![Mobile Interface](docs/screenshots/02_responsive_mobile_interface.png)               |
+| **03** | **Wallet Options & Connected State**       | ![Wallet Options](docs/screenshots/03_wallet_options_and_connected.png)                |
+| **04** | **Demand Circle Creation & Progress**      | ![Demand Circle Creation](docs/screenshots/04_demand_circle_creation_and_progress.png) |
+| **05** | **Competing Seller Offers**                | ![Competing Offers](docs/screenshots/05_competing_seller_offers.png)                   |
+| **06** | **Real Accepted Offer Interaction**        | ![Accepted Offer](docs/screenshots/06_real_accepted_offer_interaction.png)             |
+| **07** | **Successful Settlement & Escrow Release** | ![Escrow Settlement](docs/screenshots/07_successful_settlement_escrow.png)             |
+| **08** | **Failed Deal & Refund Protection Flow**   | ![Refund Flow](docs/screenshots/08_failed_deal_and_refund_outcome.png)                 |
+| **09** | **Deployed Contract & Verifiable Hashes**  | ![Contract & Hashes](docs/screenshots/09_deployed_contract_and_tx_hash.png)            |
+| **10** | **Running CI/CD Automation Workflow**      | ![CI Workflow](docs/screenshots/10_running_ci_workflow.png)                            |
+| **11** | **Automated Test Suite Output**            | ![Test Output](docs/screenshots/11_automated_test_output.png)                          |
 
 ---
 
@@ -119,30 +126,37 @@ Test Files  56 passed (56)
 ## Getting Started Locally
 
 ### 1. Install Dependencies
+
 ```bash
 pnpm install
 ```
 
 ### 2. Run Test Suite
+
 ```bash
 pnpm test
 ```
 
 ### 3. Verify Types
+
 ```bash
 pnpm run typecheck
 ```
 
 ### 4. Start Development Server
+
 ```bash
 pnpm run dev
 ```
+
 Open `http://localhost:3000` in your browser.
 
 ### 5. Build for Production
+
 ```bash
 pnpm run build
 ```
+
 Outputs optimized static assets to `dist/` with chunk splitting (`vendor-stellar`, `vendor-react`).
 
 ### 6. Production Deployment

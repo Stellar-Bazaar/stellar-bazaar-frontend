@@ -38,7 +38,11 @@ export class ErrorBoundary extends Component<Props, State> {
           }}
         >
           <div className="glass-card" style={{ maxWidth: '480px', textAlign: 'center' }}>
-            <AlertTriangle size={48} color="var(--accent-warning)" style={{ margin: '0 auto 1rem' }} />
+            <AlertTriangle
+              size={48}
+              color="var(--accent-warning)"
+              style={{ margin: '0 auto 1rem' }}
+            />
             <h1 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>Something went wrong</h1>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
               {this.state.error?.message || 'An unexpected rendering error occurred.'}

@@ -26,9 +26,10 @@ export const TransactionBanner: React.FC<TransactionBannerProps> = ({
       aria-live="polite"
       className="glass-card"
       style={{
-        background: status === 'CONFIRMED'
-          ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(6, 78, 59, 0.15) 100%)'
-          : 'linear-gradient(135deg, rgba(239, 68, 68, 0.12) 0%, rgba(127, 29, 29, 0.15) 100%)',
+        background:
+          status === 'CONFIRMED'
+            ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(6, 78, 59, 0.15) 100%)'
+            : 'linear-gradient(135deg, rgba(239, 68, 68, 0.12) 0%, rgba(127, 29, 29, 0.15) 100%)',
         border: `1px solid ${status === 'CONFIRMED' ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`,
         borderRadius: 'var(--radius-md)',
         padding: '0.9rem 1.25rem',
@@ -47,11 +48,13 @@ export const TransactionBanner: React.FC<TransactionBannerProps> = ({
           <AlertCircle size={20} color="#f87171" style={{ flexShrink: 0 }} />
         )}
         <div style={{ minWidth: 0 }}>
-          <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#fff' }}>
-            {title}
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.2rem' }}>
-            <span style={{ fontFamily: 'monospace', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+          <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#fff' }}>{title}</div>
+          <div
+            style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.2rem' }}
+          >
+            <span
+              style={{ fontFamily: 'monospace', fontSize: '0.75rem', color: 'var(--text-muted)' }}
+            >
               Hash: {shortHash}
             </span>
             <CopyButton text={txHash} size={12} label="Copy transaction hash" />

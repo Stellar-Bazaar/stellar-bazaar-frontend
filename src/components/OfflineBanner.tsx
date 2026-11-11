@@ -22,9 +22,7 @@ export const OfflineBanner: React.FC<OfflineBannerProps> = ({
 
   const isCompleteOffline = !isOnline;
 
-  const title = isCompleteOffline
-    ? 'No Internet Connection'
-    : 'Stellar RPC Network Unreachable';
+  const title = isCompleteOffline ? 'No Internet Connection' : 'Stellar RPC Network Unreachable';
 
   const message = isCompleteOffline
     ? 'You are currently offline. Viewing cached circle data; transaction signing is paused.'
@@ -52,14 +50,9 @@ export const OfflineBanner: React.FC<OfflineBannerProps> = ({
           className="shrink-0 ml-3 px-3 py-1 bg-amber-600/80 hover:bg-amber-500 disabled:opacity-50 text-slate-950 font-bold text-xs rounded-lg shadow-sm transition flex items-center space-x-1"
           data-testid="offline-retry-btn"
         >
-          {isRetrying ? (
-            <span>Connecting...</span>
-          ) : (
-            <span>Retry Connection</span>
-          )}
+          {isRetrying ? <span>Connecting...</span> : <span>Retry Connection</span>}
         </button>
       )}
     </div>
   );
 };
-

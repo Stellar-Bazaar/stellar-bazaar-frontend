@@ -123,7 +123,9 @@ export const WalletModal: React.FC<WalletModalProps> = ({
               <Wallet size={20} color="var(--accent-primary-light)" />
             </div>
             <div>
-              <h2 style={{ fontSize: '1.2rem', fontWeight: 700, margin: 0 }}>Connect Stellar Wallet</h2>
+              <h2 style={{ fontSize: '1.2rem', fontWeight: 700, margin: 0 }}>
+                Connect Stellar Wallet
+              </h2>
               <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                 Multi-wallet selection for Stellar Testnet
               </span>
@@ -234,8 +236,8 @@ export const WalletModal: React.FC<WalletModalProps> = ({
                             wallet.id === 'FREIGHTER'
                               ? 'badge-primary'
                               : wallet.id === 'COMPANION'
-                              ? 'badge-success'
-                              : 'badge-testnet'
+                                ? 'badge-success'
+                                : 'badge-testnet'
                           }`}
                           style={{ fontSize: '0.68rem', padding: '0.15rem 0.45rem' }}
                         >
@@ -243,13 +245,28 @@ export const WalletModal: React.FC<WalletModalProps> = ({
                         </span>
                       )}
                     </div>
-                    <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', margin: '0.2rem 0 0 0' }}>
+                    <p
+                      style={{
+                        fontSize: '0.78rem',
+                        color: 'var(--text-muted)',
+                        margin: '0.2rem 0 0 0',
+                      }}
+                    >
                       {wallet.description}
                     </p>
 
                     {!wallet.isAvailable && wallet.installUrl && (
-                      <div style={{ marginTop: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                        <span style={{ fontSize: '0.72rem', color: '#fbbf24' }}>Not detected in browser</span>
+                      <div
+                        style={{
+                          marginTop: '0.4rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.4rem',
+                        }}
+                      >
+                        <span style={{ fontSize: '0.72rem', color: '#fbbf24' }}>
+                          Not detected in browser
+                        </span>
                         <a
                           href={wallet.installUrl}
                           target="_blank"
@@ -297,7 +314,9 @@ export const WalletModal: React.FC<WalletModalProps> = ({
                       id={`btn-connect-${wallet.id.toLowerCase()}`}
                       onClick={() => handleWalletClick(wallet.id)}
                       disabled={isConnecting}
-                      className={wallet.id === 'FREIGHTER' ? 'btn btn-primary' : 'btn btn-secondary'}
+                      className={
+                        wallet.id === 'FREIGHTER' ? 'btn btn-primary' : 'btn btn-secondary'
+                      }
                       style={{
                         padding: '0.45rem 0.95rem',
                         fontSize: '0.825rem',
@@ -333,7 +352,9 @@ export const WalletModal: React.FC<WalletModalProps> = ({
             color: 'var(--text-muted)',
           }}
         >
-          <span>Target Network: <strong>Stellar Testnet</strong></span>
+          <span>
+            Target Network: <strong>Stellar Testnet</strong>
+          </span>
           <span>Soroban Smart Contracts Ready</span>
         </div>
       </div>

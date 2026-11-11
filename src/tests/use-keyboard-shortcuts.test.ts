@@ -4,7 +4,9 @@ import { formatShortcutKey } from '../hooks/useKeyboardShortcuts';
 describe('useKeyboardShortcuts & formatShortcutKey', () => {
   it('formats shortcuts correctly for Windows / standard platforms', () => {
     expect(formatShortcutKey({ key: 'k', ctrlOrMeta: true })).toMatch(/Ctrl\+K|⌘K/);
-    expect(formatShortcutKey({ key: 'n', ctrlOrMeta: true, shift: true })).toMatch(/Ctrl\+Shift\+N|⌘⇧N/);
+    expect(formatShortcutKey({ key: 'n', ctrlOrMeta: true, shift: true })).toMatch(
+      /Ctrl\+Shift\+N|⌘⇧N/
+    );
     expect(formatShortcutKey({ key: 'Escape' })).toBe('ESCAPE');
   });
 
@@ -78,4 +80,3 @@ describe('useKeyboardShortcuts & formatShortcutKey', () => {
     });
   });
 });
-

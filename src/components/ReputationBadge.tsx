@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  calculateReputationScore,
-  SellerStats,
-  ReputationTier,
-} from '../utils/reputation-score';
+import { calculateReputationScore, SellerStats, ReputationTier } from '../utils/reputation-score';
 
 export interface ReputationBadgeProps {
   stats: SellerStats;
@@ -77,27 +73,30 @@ export const ReputationBadge: React.FC<ReputationBadgeProps> = ({
         </svg>
       )}
       {analysis.tier === 'TOP_TRADER' && (
-        <svg className="w-3.5 h-3.5 shrink-0 text-emerald-400" viewBox="0 0 24 24" fill="currentColor">
+        <svg
+          className="w-3.5 h-3.5 shrink-0 text-emerald-400"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+        >
           <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
         </svg>
       )}
       {analysis.tier === 'VERIFIED' && (
-        <svg className="w-3.5 h-3.5 shrink-0 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+        <svg
+          className="w-3.5 h-3.5 shrink-0 text-blue-400"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+        >
           <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
         </svg>
       )}
-      {analysis.tier === 'NOVICE' && (
-        <span className="w-1.5 h-1.5 rounded-full bg-slate-500" />
-      )}
+      {analysis.tier === 'NOVICE' && <span className="w-1.5 h-1.5 rounded-full bg-slate-500" />}
 
       <span>{analysis.tierLabel}</span>
 
-      {showScore && (
-        <span className="font-mono opacity-80 pl-0.5">
-          {analysis.score}
-        </span>
-      )}
+      {showScore && <span className="font-mono opacity-80 pl-0.5">{analysis.score}</span>}
     </span>
   );
 };
-

@@ -11,4 +11,3 @@ describe('ToastContainer component', () => {
     expect(ToastContainer.name).toBe('ToastContainer');
   });
 });
-

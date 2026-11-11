@@ -38,7 +38,10 @@ export class SorobanContractService {
   }
 
   static getDealEngineContractId(): string {
-    return CONTRACT_CONFIG.dealEngine?.contractId || 'CDCK6A2QB5QTILDWILUQGAUWXI543TK63WN2OKG7WEWHBAMGZ6ESKY4G';
+    return (
+      CONTRACT_CONFIG.dealEngine?.contractId ||
+      'CDCK6A2QB5QTILDWILUQGAUWXI543TK63WN2OKG7WEWHBAMGZ6ESKY4G'
+    );
   }
 
   static getExplorerUrl(): string {
@@ -46,7 +49,10 @@ export class SorobanContractService {
   }
 
   static getDealEngineExplorerUrl(): string {
-    return CONTRACT_CONFIG.dealEngine?.explorerUrl || `https://stellar.expert/explorer/testnet/contract/${this.getDealEngineContractId()}`;
+    return (
+      CONTRACT_CONFIG.dealEngine?.explorerUrl ||
+      `https://stellar.expert/explorer/testnet/contract/${this.getDealEngineContractId()}`
+    );
   }
 
   /**
@@ -137,7 +143,7 @@ export class SorobanContractService {
         deadlineDate: new Date(deadlineSecs * 1000).toLocaleString(),
         created_at: Number(raw.created_at),
         createdDate: new Date(Number(raw.created_at) * 1000).toLocaleString(),
-        status: isExpired ? 'EXPIRED' : (statusMap[raw.status] || 'OPEN'),
+        status: isExpired ? 'EXPIRED' : statusMap[raw.status] || 'OPEN',
         isExpired,
         isAuthoritativeOnChain: true,
       };
@@ -418,11 +424,16 @@ export class SorobanContractService {
 
     const prepared = await server.prepareTransaction(tx);
     const signedXdr = await WalletManager.signTransaction(prepared.toXDR());
-    const signedTx = TransactionBuilder.fromXDR(signedXdr, CONTRACT_CONFIG.networkPassphrase || Networks.TESTNET);
+    const signedTx = TransactionBuilder.fromXDR(
+      signedXdr,
+      CONTRACT_CONFIG.networkPassphrase || Networks.TESTNET
+    );
 
     const sendRes = await server.sendTransaction(signedTx);
     if (sendRes.status === 'ERROR') {
-      throw new Error(`Transaction submission error: ${sendRes.errorResult?.toXDR('base64') || 'Unknown'}`);
+      throw new Error(
+        `Transaction submission error: ${sendRes.errorResult?.toXDR('base64') || 'Unknown'}`
+      );
     }
 
     for (let attempt = 0; attempt < 35; attempt++) {
@@ -532,17 +543,11 @@ export class SorobanContractService {
   /**
    * Claim refund from BazaarDealEngine if expired or cancelled.
    */
-  static async claimRefund(
-    dealId: number,
-    buyerAddress: string
-  ): Promise<{ txHash: string }> {
+  static async claimRefund(dealId: number, buyerAddress: string): Promise<{ txHash: string }> {
     return this.executeContractInvocation(
       this.getDealEngineContractId(),
       'claim_refund',
-      [
-        new Address(buyerAddress).toScVal(),
-        nativeToScVal(BigInt(dealId), { type: 'u64' }),
-      ],
+      [new Address(buyerAddress).toScVal(), nativeToScVal(BigInt(dealId), { type: 'u64' })],
       buyerAddress
     );
   }
@@ -553,7 +558,9 @@ export class SorobanContractService {
   static async createDemandCircle(
     creatorAddress: string,
     params: CreateCircleParams,
-    onStatusUpdate?: (step: 'SIMULATING' | 'AWAITING_SIGNATURE' | 'SUBMITTING' | 'CONFIRMING') => void
+    onStatusUpdate?: (
+      step: 'SIMULATING' | 'AWAITING_SIGNATURE' | 'SUBMITTING' | 'CONFIRMING'
+    ) => void
   ): Promise<{ txHash: string; circleId: number }> {
     if (!params.title || params.title.trim().length === 0 || params.title.length > 64) {
       throw new Error('Title must be between 1 and 64 characters');
@@ -614,7 +621,7 @@ export class SorobanContractService {
       const latestLedgerRes = await server.getLatestLedger();
       const latestLedger = latestLedgerRes.sequence;
 
-      const queryStart = startLedger || Math.max(1, (this.lastIndexedLedger || latestLedger - 1000));
+      const queryStart = startLedger || Math.max(1, this.lastIndexedLedger || latestLedger - 1000);
       const contractIds = [CONTRACT_CONFIG.contractId];
       if (CONTRACT_CONFIG.dealEngine?.contractId) {
         contractIds.push(CONTRACT_CONFIG.dealEngine.contractId);

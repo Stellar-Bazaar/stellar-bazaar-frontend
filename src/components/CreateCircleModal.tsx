@@ -1,12 +1,5 @@
 import React, { useState } from 'react';
-import {
-  X,
-  PlusCircle,
-  ExternalLink,
-  CheckCircle2,
-  AlertTriangle,
-  Layers,
-} from 'lucide-react';
+import { X, PlusCircle, ExternalLink, CheckCircle2, AlertTriangle, Layers } from 'lucide-react';
 import { CreateCircleParams } from '../types/contract';
 import { SorobanContractService } from '../services/soroban-contract';
 
@@ -40,9 +33,7 @@ export const CreateCircleModal: React.FC<CreateCircleModalProps> = ({
 
   if (!isOpen) return null;
 
-  const totalPoolXlm = (
-    form.target_quantity * (parseFloat(form.target_price_xlm) || 0)
-  ).toFixed(2);
+  const totalPoolXlm = (form.target_quantity * (parseFloat(form.target_price_xlm) || 0)).toFixed(2);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,10 +41,8 @@ export const CreateCircleModal: React.FC<CreateCircleModalProps> = ({
     setStatus('SIMULATING');
 
     try {
-      const result = await SorobanContractService.createDemandCircle(
-        creatorAddress,
-        form,
-        (step) => setStatus(step)
+      const result = await SorobanContractService.createDemandCircle(creatorAddress, form, (step) =>
+        setStatus(step)
       );
 
       setResultTxHash(result.txHash);
@@ -132,7 +121,9 @@ export const CreateCircleModal: React.FC<CreateCircleModalProps> = ({
               <PlusCircle size={20} color="var(--accent-primary-light)" />
             </div>
             <div>
-              <h2 style={{ fontSize: '1.2rem', fontWeight: 700, margin: 0 }}>Create Demand Circle</h2>
+              <h2 style={{ fontSize: '1.2rem', fontWeight: 700, margin: 0 }}>
+                Create Demand Circle
+              </h2>
               <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                 Deploy collective purchasing demand directly to Soroban Testnet
               </span>
@@ -178,7 +169,8 @@ export const CreateCircleModal: React.FC<CreateCircleModalProps> = ({
               Demand Circle Created On-Chain!
             </h3>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '1.5rem' }}>
-              Circle #{resultCircleId} was recorded on the Stellar Testnet ledger in the DemandCircleRegistry contract.
+              Circle #{resultCircleId} was recorded on the Stellar Testnet ledger in the
+              DemandCircleRegistry contract.
             </p>
 
             {resultTxHash && (
@@ -192,7 +184,13 @@ export const CreateCircleModal: React.FC<CreateCircleModalProps> = ({
                   textAlign: 'left',
                 }}
               >
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.35rem' }}>
+                <div
+                  style={{
+                    fontSize: '0.75rem',
+                    color: 'var(--text-muted)',
+                    marginBottom: '0.35rem',
+                  }}
+                >
                   Confirmed Testnet Transaction Hash:
                 </div>
                 <div
@@ -231,7 +229,10 @@ export const CreateCircleModal: React.FC<CreateCircleModalProps> = ({
           </div>
         ) : (
           /* Form Screen */
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <form
+            onSubmit={handleSubmit}
+            style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
+          >
             {errorMessage && (
               <div
                 id="create-circle-error"
@@ -256,7 +257,12 @@ export const CreateCircleModal: React.FC<CreateCircleModalProps> = ({
             <div>
               <label
                 htmlFor="circle-title"
-                style={{ display: 'block', fontSize: '0.825rem', fontWeight: 600, marginBottom: '0.35rem' }}
+                style={{
+                  display: 'block',
+                  fontSize: '0.825rem',
+                  fontWeight: 600,
+                  marginBottom: '0.35rem',
+                }}
               >
                 Product or Commodity Reference (1-64 chars) *
               </label>
@@ -285,7 +291,12 @@ export const CreateCircleModal: React.FC<CreateCircleModalProps> = ({
               <div>
                 <label
                   htmlFor="circle-quantity"
-                  style={{ display: 'block', fontSize: '0.825rem', fontWeight: 600, marginBottom: '0.35rem' }}
+                  style={{
+                    display: 'block',
+                    fontSize: '0.825rem',
+                    fontWeight: 600,
+                    marginBottom: '0.35rem',
+                  }}
                 >
                   Target Quantity (Units) *
                 </label>
@@ -296,7 +307,9 @@ export const CreateCircleModal: React.FC<CreateCircleModalProps> = ({
                   max="1000000"
                   required
                   value={form.target_quantity}
-                  onChange={(e) => setForm({ ...form, target_quantity: parseInt(e.target.value) || 1 })}
+                  onChange={(e) =>
+                    setForm({ ...form, target_quantity: parseInt(e.target.value) || 1 })
+                  }
                   style={{
                     width: '100%',
                     padding: '0.65rem 0.85rem',
@@ -308,8 +321,15 @@ export const CreateCircleModal: React.FC<CreateCircleModalProps> = ({
                   }}
                 />
                 {form.target_price_xlm && !isNaN(parseFloat(form.target_price_xlm)) && (
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.35rem' }}>
-                    ≈ {(Math.round(parseFloat(form.target_price_xlm) * 10000000)).toLocaleString()} Stroops
+                  <div
+                    style={{
+                      fontSize: '0.75rem',
+                      color: 'var(--text-muted)',
+                      marginTop: '0.35rem',
+                    }}
+                  >
+                    ≈ {Math.round(parseFloat(form.target_price_xlm) * 10000000).toLocaleString()}{' '}
+                    Stroops
                   </div>
                 )}
               </div>
@@ -317,12 +337,24 @@ export const CreateCircleModal: React.FC<CreateCircleModalProps> = ({
               <div>
                 <label
                   htmlFor="circle-price"
-                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.825rem', fontWeight: 600, marginBottom: '0.35rem' }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    fontSize: '0.825rem',
+                    fontWeight: 600,
+                    marginBottom: '0.35rem',
+                  }}
                 >
                   <span>Target Unit Price (XLM) *</span>
                   <span
                     title="1 XLM = 10,000,000 Stroops. Soroban stores prices in Stroops with 7 decimal precision."
-                    style={{ fontSize: '0.75rem', color: 'var(--accent-secondary)', cursor: 'help', fontWeight: 400 }}
+                    style={{
+                      fontSize: '0.75rem',
+                      color: 'var(--accent-secondary)',
+                      cursor: 'help',
+                      fontWeight: 400,
+                    }}
                   >
                     ℹ️ 1 XLM = 10⁷ Stroops
                   </span>
@@ -352,7 +384,12 @@ export const CreateCircleModal: React.FC<CreateCircleModalProps> = ({
               <div>
                 <label
                   htmlFor="circle-duration"
-                  style={{ display: 'block', fontSize: '0.825rem', fontWeight: 600, marginBottom: '0.35rem' }}
+                  style={{
+                    display: 'block',
+                    fontSize: '0.825rem',
+                    fontWeight: 600,
+                    marginBottom: '0.35rem',
+                  }}
                 >
                   Deadline Duration (Days) *
                 </label>
@@ -363,7 +400,9 @@ export const CreateCircleModal: React.FC<CreateCircleModalProps> = ({
                   max="365"
                   required
                   value={form.duration_days}
-                  onChange={(e) => setForm({ ...form, duration_days: parseInt(e.target.value) || 1 })}
+                  onChange={(e) =>
+                    setForm({ ...form, duration_days: parseInt(e.target.value) || 1 })
+                  }
                   style={{
                     width: '100%',
                     padding: '0.65rem 0.85rem',
@@ -379,7 +418,12 @@ export const CreateCircleModal: React.FC<CreateCircleModalProps> = ({
               <div>
                 <label
                   htmlFor="circle-metadata"
-                  style={{ display: 'block', fontSize: '0.825rem', fontWeight: 600, marginBottom: '0.35rem' }}
+                  style={{
+                    display: 'block',
+                    fontSize: '0.825rem',
+                    fontWeight: 600,
+                    marginBottom: '0.35rem',
+                  }}
                 >
                   Metadata URI / IPFS (Optional)
                 </label>
@@ -415,12 +459,22 @@ export const CreateCircleModal: React.FC<CreateCircleModalProps> = ({
                 fontSize: '0.85rem',
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  color: 'var(--text-muted)',
+                }}
+              >
                 <Layers size={16} color="var(--accent-primary-light)" />
                 <span>Aggregated Demand Commitment:</span>
               </div>
               <span style={{ fontWeight: 700, color: '#fff' }}>
-                {totalPoolXlm} XLM <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>({form.target_quantity} units)</span>
+                {totalPoolXlm} XLM{' '}
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                  ({form.target_quantity} units)
+                </span>
               </span>
             </div>
 

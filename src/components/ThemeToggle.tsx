@@ -37,10 +37,7 @@ export function applyTheme(mode: ThemeMode): void {
   }
 }
 
-export const ThemeToggle: React.FC<ThemeToggleProps> = ({
-  className = '',
-  onThemeChange,
-}) => {
+export const ThemeToggle: React.FC<ThemeToggleProps> = ({ className = '', onThemeChange }) => {
   const [mode, setMode] = useState<ThemeMode>(getInitialTheme);
 
   useEffect(() => {

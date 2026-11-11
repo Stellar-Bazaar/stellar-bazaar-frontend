@@ -89,7 +89,9 @@ describe('Soroban Smart Contract Integration', () => {
   });
 
   it('passes caller address as first argument to settle_deal', async () => {
-    const spy = vi.spyOn(SorobanContractService as any, 'executeContractInvocation').mockResolvedValue({ txHash: 'abc' });
+    const spy = vi
+      .spyOn(SorobanContractService as any, 'executeContractInvocation')
+      .mockResolvedValue({ txHash: 'abc' });
     const dummyCaller = 'GAFAVMHP54H3DRZU7RJPOIV5N7KEYC5F7XFKX3YXMYYZB2VBZBJG5PJZ';
     await SorobanContractService.settleDeal(1, 2, dummyCaller);
 

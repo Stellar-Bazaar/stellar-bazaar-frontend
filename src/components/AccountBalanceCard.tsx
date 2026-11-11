@@ -29,7 +29,9 @@ export const AccountBalanceCard: React.FC<AccountBalanceCardProps> = ({
 }) => {
   if (!publicKey) {
     return (
-      <div className={`p-4 bg-gray-50 dark:bg-gray-800/60 border border-dashed border-gray-300 dark:border-gray-700 rounded-xl text-center text-sm text-gray-500 dark:text-gray-400 ${className}`}>
+      <div
+        className={`p-4 bg-gray-50 dark:bg-gray-800/60 border border-dashed border-gray-300 dark:border-gray-700 rounded-xl text-center text-sm text-gray-500 dark:text-gray-400 ${className}`}
+      >
         Connect your Stellar wallet to view balances and trustlines.
       </div>
     );
@@ -38,7 +40,9 @@ export const AccountBalanceCard: React.FC<AccountBalanceCardProps> = ({
   const shortenedAddress = `${publicKey.slice(0, 6)}...${publicKey.slice(-6)}`;
 
   return (
-    <div className={`p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-xs ${className}`}>
+    <div
+      className={`p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-xs ${className}`}
+    >
       <div className="flex items-center justify-between pb-3 border-b border-gray-100 dark:border-gray-700">
         <div>
           <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">

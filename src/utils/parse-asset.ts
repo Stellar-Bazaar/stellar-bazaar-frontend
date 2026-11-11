@@ -39,9 +39,7 @@ export function parseAssetAmount(input: string): bigint {
   }
 
   if (fracStr.length > 7) {
-    throw new Error(
-      `Stellar assets support maximum 7 decimal places, received ${fracStr.length}`
-    );
+    throw new Error(`Stellar assets support maximum 7 decimal places, received ${fracStr.length}`);
   }
 
   const paddedFrac = fracStr.padEnd(7, '0');

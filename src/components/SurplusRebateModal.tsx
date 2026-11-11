@@ -33,15 +33,15 @@ export const SurplusRebateModal: React.FC<SurplusRebateModalProps> = ({
 
   if (!isOpen) return null;
 
-  const unitSavings = targetUnitPriceStroops > acceptedUnitPriceStroops
-    ? targetUnitPriceStroops - acceptedUnitPriceStroops
-    : 0n;
+  const unitSavings =
+    targetUnitPriceStroops > acceptedUnitPriceStroops
+      ? targetUnitPriceStroops - acceptedUnitPriceStroops
+      : 0n;
 
   const buyerRebateAmount = unitSavings * BigInt(buyerCommittedVolume);
 
-  const discountPercent = targetUnitPriceStroops > 0n
-    ? Number((unitSavings * 100n) / targetUnitPriceStroops)
-    : 0;
+  const discountPercent =
+    targetUnitPriceStroops > 0n ? Number((unitSavings * 100n) / targetUnitPriceStroops) : 0;
 
   return (
     <div
@@ -77,7 +77,9 @@ export const SurplusRebateModal: React.FC<SurplusRebateModalProps> = ({
 
         <div className="p-5 space-y-4">
           <p className="text-xs text-gray-600 dark:text-gray-300">
-            Great news! The accepted seller offer for <strong className="text-gray-900 dark:text-white">{circleTitle}</strong> beat the target price, unlocking surplus escrow savings for committed buyers.
+            Great news! The accepted seller offer for{' '}
+            <strong className="text-gray-900 dark:text-white">{circleTitle}</strong> beat the target
+            price, unlocking surplus escrow savings for committed buyers.
           </p>
 
           <div className="p-3.5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-xl space-y-2">

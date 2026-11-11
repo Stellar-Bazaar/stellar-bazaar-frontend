@@ -32,4 +32,3 @@ describe('SavingsIndicator', () => {
     expect(element.props.size).toBe('lg');
   });
 });
-

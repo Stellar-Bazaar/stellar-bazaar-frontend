@@ -20,9 +20,13 @@ describe('Stellar Address Validation', () => {
   it('rejects addresses with invalid lengths or checksums', () => {
     expect(isValidStellarAddress('')).toBe(false);
     expect(isValidStellarAddress('GABC123')).toBe(false);
-    expect(isValidStellarAddress('SAFAVMHP54H3DRZU7RJPOIV5N7KEYC5F7XFKX3YXMYYZB2VBZBJG5PJZ')).toBe(false); // Secret key format 'S'
+    expect(isValidStellarAddress('SAFAVMHP54H3DRZU7RJPOIV5N7KEYC5F7XFKX3YXMYYZB2VBZBJG5PJZ')).toBe(
+      false
+    ); // Secret key format 'S'
     expect(isValidStellarAddress('0x71C84166b3a967c1309CE6A795261804Ea53be8D')).toBe(false); // EVM address
-    expect(isValidStellarAddress('GAFAVMHP54H3DRZU7RJPOIV5N7KEYC5F7XFKX3YXMYYZB2VBZBJG5999')).toBe(false); // Bad checksum
+    expect(isValidStellarAddress('GAFAVMHP54H3DRZU7RJPOIV5N7KEYC5F7XFKX3YXMYYZB2VBZBJG5999')).toBe(
+      false
+    ); // Bad checksum
   });
 
   it('shortens addresses for readable display', () => {
@@ -114,7 +118,6 @@ describe('Payment Form Combined Validation', () => {
     expect(errors.destinationAddress).toContain('cannot be your own wallet address');
   });
 });
-
 
 describe('Seller Quote Lead Time Validation', () => {
   it('accepts valid positive integer lead times', () => {

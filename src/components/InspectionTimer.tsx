@@ -36,12 +36,9 @@ export const InspectionTimer: React.FC<InspectionTimerProps> = ({
 }) => {
   // Normalize timestamp to ms
   const endMs =
-    inspectionEndTimestamp < 1e11
-      ? inspectionEndTimestamp * 1000
-      : inspectionEndTimestamp;
+    inspectionEndTimestamp < 1e11 ? inspectionEndTimestamp * 1000 : inspectionEndTimestamp;
 
-  const calculateRemainingSeconds = () =>
-    Math.max(0, Math.floor((endMs - Date.now()) / 1000));
+  const calculateRemainingSeconds = () => Math.max(0, Math.floor((endMs - Date.now()) / 1000));
 
   const [secondsRemaining, setSecondsRemaining] = useState(calculateRemainingSeconds);
 
@@ -72,8 +69,8 @@ export const InspectionTimer: React.FC<InspectionTimerProps> = ({
               isExpired
                 ? 'bg-emerald-400'
                 : isUrgent
-                ? 'bg-amber-400 animate-ping'
-                : 'bg-cyan-400 animate-pulse'
+                  ? 'bg-amber-400 animate-ping'
+                  : 'bg-cyan-400 animate-pulse'
             }`}
           />
           <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300">
@@ -100,11 +97,7 @@ export const InspectionTimer: React.FC<InspectionTimerProps> = ({
             className="flex-1 py-2 px-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 disabled:opacity-40 text-white rounded-xl text-xs font-semibold shadow-md shadow-emerald-900/30 transition flex items-center justify-center space-x-1.5"
             data-testid="confirm-early-btn"
           >
-            {isConfirming ? (
-              <span>Confirming on-chain...</span>
-            ) : (
-              <span>Confirm Satisfaction</span>
-            )}
+            {isConfirming ? <span>Confirming on-chain...</span> : <span>Confirm Satisfaction</span>}
           </button>
         )}
 
@@ -122,4 +115,3 @@ export const InspectionTimer: React.FC<InspectionTimerProps> = ({
     </div>
   );
 };
-

@@ -63,4 +63,3 @@ describe('simulation-parser service', () => {
     expect(zeroBaseTotal).toBe(50_100n);
   });
 });
-

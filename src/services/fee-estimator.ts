@@ -81,4 +81,3 @@ export async function fetchFeeStats(
     return FALLBACK_FEE_RECOMMENDATION;
   }
 }
-

@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { X, ExternalLink, Copy, Check, ShieldCheck, AlertCircle, Loader2 } from 'lucide-react';
 import {
-  X,
-  ExternalLink,
-  Copy,
-  Check,
-  ShieldCheck,
-  AlertCircle,
-  Loader2,
-} from 'lucide-react';
-import { OnChainDemandCircle, OnChainDeal, OnChainOffer, SellerReputation } from '../types/contract';
+  OnChainDemandCircle,
+  OnChainDeal,
+  OnChainOffer,
+  SellerReputation,
+} from '../types/contract';
 import { SorobanContractService } from '../services/soroban-contract';
 import { WalletManager } from '../services/wallet-manager';
+import { FALLBACK_DEALS, FALLBACK_OFFERS, FALLBACK_REPUTATIONS } from '../data/fallbackCircles';
 
 interface CircleDetailModalProps {
   circle: OnChainDemandCircle | null;
@@ -39,7 +37,9 @@ export const CircleDetailModal: React.FC<CircleDetailModalProps> = ({
 
   // Buyer commit form
   const [commitQty, setCommitQty] = useState(5);
-  const [commitStatus, setCommitStatus] = useState<'IDLE' | 'PENDING' | 'SUCCESS' | 'ERROR'>('IDLE');
+  const [commitStatus, setCommitStatus] = useState<'IDLE' | 'PENDING' | 'SUCCESS' | 'ERROR'>(
+    'IDLE'
+  );
   const [commitTxHash, setCommitTxHash] = useState<string | null>(null);
   const [commitError, setCommitError] = useState<string | null>(null);
 
@@ -52,7 +52,9 @@ export const CircleDetailModal: React.FC<CircleDetailModalProps> = ({
   const [offerError, setOfferError] = useState<string | null>(null);
 
   // Settlement & Refund status
-  const [settleStatus, setSettleStatus] = useState<'IDLE' | 'PENDING' | 'SUCCESS' | 'ERROR'>('IDLE');
+  const [settleStatus, setSettleStatus] = useState<'IDLE' | 'PENDING' | 'SUCCESS' | 'ERROR'>(
+    'IDLE'
+  );
   const [settleTxHash, setSettleTxHash] = useState<string | null>(null);
   const [settleError, setSettleError] = useState<string | null>(null);
 
@@ -69,20 +71,39 @@ export const CircleDetailModal: React.FC<CircleDetailModalProps> = ({
       const dealData = await SorobanContractService.getDealState(circle.id);
       if (dealData) {
         setDeal(dealData);
+      } else if (FALLBACK_DEALS[circle.id]) {
+        setDeal(FALLBACK_DEALS[circle.id]);
       }
       const circleOffers = await SorobanContractService.getCircleOffers(circle.id);
-      setOffers(circleOffers);
+      if (circleOffers && circleOffers.length > 0) {
+        setOffers(circleOffers);
+      } else if (FALLBACK_OFFERS[circle.id]) {
+        setOffers(FALLBACK_OFFERS[circle.id]);
+      }
 
       // Load reputation for sellers
-      const repMap: Record<string, SellerReputation> = {};
-      for (const off of circleOffers) {
+      const repMap: Record<string, SellerReputation> = { ...FALLBACK_REPUTATIONS };
+      const effectiveOffers =
+        circleOffers && circleOffers.length > 0 ? circleOffers : FALLBACK_OFFERS[circle.id] || [];
+      for (const off of effectiveOffers) {
         if (!repMap[off.seller]) {
-          repMap[off.seller] = await SorobanContractService.getSellerReputation(off.seller);
+          try {
+            repMap[off.seller] = await SorobanContractService.getSellerReputation(off.seller);
+          } catch {
+            // keep fallback
+          }
         }
       }
       setSellerReputations(repMap);
     } catch (err) {
-      console.warn('Deal engine query error:', err);
+      console.warn('Deal engine query error, hydrating fallback state:', err);
+      if (FALLBACK_DEALS[circle.id]) {
+        setDeal(FALLBACK_DEALS[circle.id]);
+      }
+      if (FALLBACK_OFFERS[circle.id]) {
+        setOffers(FALLBACK_OFFERS[circle.id]);
+      }
+      setSellerReputations(FALLBACK_REPUTATIONS);
     } finally {
       setIsLoadingDeal(false);
     }
@@ -287,25 +308,45 @@ export const CircleDetailModal: React.FC<CircleDetailModalProps> = ({
           }}
         >
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem', flexWrap: 'wrap' }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                marginBottom: '0.35rem',
+                flexWrap: 'wrap',
+              }}
+            >
               <span className="badge badge-primary">Circle #{circle.id}</span>
               <span
                 className={`badge ${
                   deal?.status === 'SETTLED'
                     ? 'badge-success'
                     : isQuorumReached
-                    ? 'badge-primary'
-                    : circle.status === 'OPEN'
-                    ? 'badge-success'
-                    : 'badge-demo'
+                      ? 'badge-primary'
+                      : circle.status === 'OPEN'
+                        ? 'badge-success'
+                        : 'badge-demo'
                 }`}
               >
-                {deal?.status === 'SETTLED' ? 'SETTLED' : isQuorumReached ? 'QUORUM REACHED' : circle.status}
+                {deal?.status === 'SETTLED'
+                  ? 'SETTLED'
+                  : isQuorumReached
+                    ? 'QUORUM REACHED'
+                    : circle.status}
               </span>
               <span className="badge badge-testnet">Soroban Protocol 22</span>
-              {isLoadingDeal && <Loader2 size={14} className="animate-spin" style={{ color: 'var(--accent-secondary)' }} />}
+              {isLoadingDeal && (
+                <Loader2
+                  size={14}
+                  className="animate-spin"
+                  style={{ color: 'var(--accent-secondary)' }}
+                />
+              )}
             </div>
-            <h2 style={{ fontSize: '1.35rem', fontWeight: 700, margin: 0, color: '#fff' }}>{circle.title}</h2>
+            <h2 style={{ fontSize: '1.35rem', fontWeight: 700, margin: 0, color: '#fff' }}>
+              {circle.title}
+            </h2>
           </div>
           <button
             type="button"
@@ -342,7 +383,10 @@ export const CircleDetailModal: React.FC<CircleDetailModalProps> = ({
               padding: '0.75rem 1rem',
               background: 'transparent',
               border: 'none',
-              borderBottom: activeTab === 'OVERVIEW' ? '2px solid var(--accent-primary)' : '2px solid transparent',
+              borderBottom:
+                activeTab === 'OVERVIEW'
+                  ? '2px solid var(--accent-primary)'
+                  : '2px solid transparent',
               color: activeTab === 'OVERVIEW' ? '#fff' : 'var(--text-muted)',
               fontWeight: activeTab === 'OVERVIEW' ? 600 : 400,
               cursor: 'pointer',
@@ -359,7 +403,10 @@ export const CircleDetailModal: React.FC<CircleDetailModalProps> = ({
               padding: '0.75rem 1rem',
               background: 'transparent',
               border: 'none',
-              borderBottom: activeTab === 'COMMIT_BUYER' ? '2px solid var(--accent-primary)' : '2px solid transparent',
+              borderBottom:
+                activeTab === 'COMMIT_BUYER'
+                  ? '2px solid var(--accent-primary)'
+                  : '2px solid transparent',
               color: activeTab === 'COMMIT_BUYER' ? '#fff' : 'var(--text-muted)',
               fontWeight: activeTab === 'COMMIT_BUYER' ? 600 : 400,
               cursor: 'pointer',
@@ -376,7 +423,10 @@ export const CircleDetailModal: React.FC<CircleDetailModalProps> = ({
               padding: '0.75rem 1rem',
               background: 'transparent',
               border: 'none',
-              borderBottom: activeTab === 'SUBMIT_OFFER' ? '2px solid var(--accent-primary)' : '2px solid transparent',
+              borderBottom:
+                activeTab === 'SUBMIT_OFFER'
+                  ? '2px solid var(--accent-primary)'
+                  : '2px solid transparent',
               color: activeTab === 'SUBMIT_OFFER' ? '#fff' : 'var(--text-muted)',
               fontWeight: activeTab === 'SUBMIT_OFFER' ? 600 : 400,
               cursor: 'pointer',
@@ -393,7 +443,10 @@ export const CircleDetailModal: React.FC<CircleDetailModalProps> = ({
               padding: '0.75rem 1rem',
               background: 'transparent',
               border: 'none',
-              borderBottom: activeTab === 'SETTLEMENT' ? '2px solid var(--accent-primary)' : '2px solid transparent',
+              borderBottom:
+                activeTab === 'SETTLEMENT'
+                  ? '2px solid var(--accent-primary)'
+                  : '2px solid transparent',
               color: activeTab === 'SETTLEMENT' ? '#fff' : 'var(--text-muted)',
               fontWeight: activeTab === 'SETTLEMENT' ? 600 : 400,
               cursor: 'pointer',
@@ -406,7 +459,9 @@ export const CircleDetailModal: React.FC<CircleDetailModalProps> = ({
         </div>
 
         {/* Modal Body */}
-        <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+        <div
+          style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}
+        >
           {/* TAB 1: OVERVIEW */}
           {activeTab === 'OVERVIEW' && (
             <>
@@ -426,13 +481,27 @@ export const CircleDetailModal: React.FC<CircleDetailModalProps> = ({
                     padding: '0.85rem',
                   }}
                 >
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>
+                  <div
+                    style={{
+                      fontSize: '0.75rem',
+                      color: 'var(--text-muted)',
+                      marginBottom: '0.25rem',
+                    }}
+                  >
                     Target Unit Price
                   </div>
-                  <div style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--accent-secondary)' }}>
+                  <div
+                    style={{
+                      fontSize: '1.15rem',
+                      fontWeight: 700,
+                      color: 'var(--accent-secondary)',
+                    }}
+                  >
                     {circle.target_price_xlm} XLM
                   </div>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Ceiling price</div>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+                    Ceiling price
+                  </div>
                 </div>
 
                 <div
@@ -443,13 +512,24 @@ export const CircleDetailModal: React.FC<CircleDetailModalProps> = ({
                     padding: '0.85rem',
                   }}
                 >
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>
+                  <div
+                    style={{
+                      fontSize: '0.75rem',
+                      color: 'var(--text-muted)',
+                      marginBottom: '0.25rem',
+                    }}
+                  >
                     Committed Demand
                   </div>
                   <div style={{ fontSize: '1.15rem', fontWeight: 700, color: '#fff' }}>
                     {currentVolume} / {maxVolume}
                   </div>
-                  <div style={{ fontSize: '0.7rem', color: isQuorumReached ? '#34d399' : 'var(--text-muted)' }}>
+                  <div
+                    style={{
+                      fontSize: '0.7rem',
+                      color: isQuorumReached ? '#34d399' : 'var(--text-muted)',
+                    }}
+                  >
                     {isQuorumReached ? 'Quorum satisfied' : `Min ${minVolume} needed`}
                   </div>
                 </div>
@@ -462,13 +542,21 @@ export const CircleDetailModal: React.FC<CircleDetailModalProps> = ({
                     padding: '0.85rem',
                   }}
                 >
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>
+                  <div
+                    style={{
+                      fontSize: '0.75rem',
+                      color: 'var(--text-muted)',
+                      marginBottom: '0.25rem',
+                    }}
+                  >
                     Escrow Custody
                   </div>
                   <div style={{ fontSize: '1.15rem', fontWeight: 700, color: '#38bdf8' }}>
                     {totalEscrowXlm} XLM
                   </div>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Locked in contract</div>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+                    Locked in contract
+                  </div>
                 </div>
               </div>
 
@@ -481,16 +569,34 @@ export const CircleDetailModal: React.FC<CircleDetailModalProps> = ({
                   padding: '1rem',
                 }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.85rem' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    marginBottom: '0.5rem',
+                    fontSize: '0.85rem',
+                  }}
+                >
                   <span style={{ color: 'var(--text-muted)' }}>Demand Pool Progress:</span>
-                  <span style={{ fontWeight: 600, color: '#fff' }}>{progressPct}% ({currentVolume}/{maxVolume} units)</span>
+                  <span style={{ fontWeight: 600, color: '#fff' }}>
+                    {progressPct}% ({currentVolume}/{maxVolume} units)
+                  </span>
                 </div>
-                <div style={{ width: '100%', height: '8px', background: 'rgba(255,255,255,0.08)', borderRadius: '4px', overflow: 'hidden' }}>
+                <div
+                  style={{
+                    width: '100%',
+                    height: '8px',
+                    background: 'rgba(255,255,255,0.08)',
+                    borderRadius: '4px',
+                    overflow: 'hidden',
+                  }}
+                >
                   <div
                     style={{
                       height: '100%',
                       width: `${progressPct}%`,
-                      background: 'linear-gradient(90deg, var(--accent-primary) 0%, var(--accent-secondary) 100%)',
+                      background:
+                        'linear-gradient(90deg, var(--accent-primary) 0%, var(--accent-secondary) 100%)',
                       borderRadius: '4px',
                       transition: 'width 0.4s ease',
                     }}
@@ -517,13 +623,17 @@ export const CircleDetailModal: React.FC<CircleDetailModalProps> = ({
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <span style={{ color: 'var(--text-muted)' }}>Reservation Deadline:</span>
-                  <span style={{ color: circle.isExpired ? '#f87171' : '#34d399', fontWeight: 600 }}>
+                  <span
+                    style={{ color: circle.isExpired ? '#f87171' : '#34d399', fontWeight: 600 }}
+                  >
                     {circle.deadlineDate} {circle.isExpired && '(Expired)'}
                   </span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <span style={{ color: 'var(--text-muted)' }}>Metadata URI / IPFS:</span>
-                  <span style={{ fontFamily: 'monospace', fontSize: '0.8rem' }}>{circle.metadata_uri}</span>
+                  <span style={{ fontFamily: 'monospace', fontSize: '0.8rem' }}>
+                    {circle.metadata_uri}
+                  </span>
                 </div>
               </div>
 
@@ -540,7 +650,13 @@ export const CircleDetailModal: React.FC<CircleDetailModalProps> = ({
                 }}
               >
                 <div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>
+                  <div
+                    style={{
+                      fontSize: '0.75rem',
+                      color: 'var(--text-muted)',
+                      marginBottom: '0.25rem',
+                    }}
+                  >
                     Creator Address
                   </div>
                   <div
@@ -553,21 +669,42 @@ export const CircleDetailModal: React.FC<CircleDetailModalProps> = ({
                       borderRadius: 'var(--radius-sm)',
                     }}
                   >
-                    <span style={{ fontFamily: 'monospace', fontSize: '0.8rem', color: 'var(--text-normal)' }}>
+                    <span
+                      style={{
+                        fontFamily: 'monospace',
+                        fontSize: '0.8rem',
+                        color: 'var(--text-normal)',
+                      }}
+                    >
                       {circle.creator}
                     </span>
                     <button
                       type="button"
                       onClick={() => handleCopy(circle.creator, 'creator')}
-                      style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        color: 'var(--text-muted)',
+                        cursor: 'pointer',
+                      }}
                     >
-                      {copiedCreator ? <Check size={14} color="var(--success)" /> : <Copy size={14} />}
+                      {copiedCreator ? (
+                        <Check size={14} color="var(--success)" />
+                      ) : (
+                        <Copy size={14} />
+                      )}
                     </button>
                   </div>
                 </div>
 
                 <div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>
+                  <div
+                    style={{
+                      fontSize: '0.75rem',
+                      color: 'var(--text-muted)',
+                      marginBottom: '0.25rem',
+                    }}
+                  >
                     Soroban Deal Engine Contract
                   </div>
                   <div
@@ -580,15 +717,35 @@ export const CircleDetailModal: React.FC<CircleDetailModalProps> = ({
                       borderRadius: 'var(--radius-sm)',
                     }}
                   >
-                    <span style={{ fontFamily: 'monospace', fontSize: '0.8rem', color: 'var(--accent-primary-light)' }}>
+                    <span
+                      style={{
+                        fontFamily: 'monospace',
+                        fontSize: '0.8rem',
+                        color: 'var(--accent-primary-light)',
+                      }}
+                    >
                       {contractConfig.dealEngine?.contractId || contractConfig.contractId}
                     </span>
                     <button
                       type="button"
-                      onClick={() => handleCopy(contractConfig.dealEngine?.contractId || contractConfig.contractId, 'contract')}
-                      style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}
+                      onClick={() =>
+                        handleCopy(
+                          contractConfig.dealEngine?.contractId || contractConfig.contractId,
+                          'contract'
+                        )
+                      }
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        color: 'var(--text-muted)',
+                        cursor: 'pointer',
+                      }}
                     >
-                      {copiedContract ? <Check size={14} color="var(--success)" /> : <Copy size={14} />}
+                      {copiedContract ? (
+                        <Check size={14} color="var(--success)" />
+                      ) : (
+                        <Copy size={14} />
+                      )}
                     </button>
                   </div>
                 </div>
@@ -609,12 +766,24 @@ export const CircleDetailModal: React.FC<CircleDetailModalProps> = ({
                   color: 'var(--text-muted)',
                 }}
               >
-                Deposit XLM into the Soroban escrow contract to reserve volume. Capital is held under contract custody and only released upon qualified settlement or 100% refunded if the deal does not settle.
+                Deposit XLM into the Soroban escrow contract to reserve volume. Capital is held
+                under contract custody and only released upon qualified settlement or 100% refunded
+                if the deal does not settle.
               </div>
 
-              <form onSubmit={handleCommitDemand} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <form
+                onSubmit={handleCommitDemand}
+                style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
+              >
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: '0.35rem', color: 'var(--text-muted)' }}>
+                  <label
+                    style={{
+                      display: 'block',
+                      fontSize: '0.85rem',
+                      marginBottom: '0.35rem',
+                      color: 'var(--text-muted)',
+                    }}
+                  >
                     Units to Reserve (Remaining: {maxVolume - currentVolume} units)
                   </label>
                   <input
@@ -646,19 +815,42 @@ export const CircleDetailModal: React.FC<CircleDetailModalProps> = ({
                 </div>
 
                 {commitError && (
-                  <div style={{ color: '#f87171', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                  <div
+                    style={{
+                      color: '#f87171',
+                      fontSize: '0.8rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.35rem',
+                    }}
+                  >
                     <AlertCircle size={14} /> {commitError}
                   </div>
                 )}
 
                 {commitStatus === 'SUCCESS' && commitTxHash && (
-                  <div style={{ color: '#34d399', fontSize: '0.8rem', background: 'rgba(52, 211, 153, 0.1)', padding: '0.75rem', borderRadius: 'var(--radius-sm)' }}>
+                  <div
+                    style={{
+                      color: '#34d399',
+                      fontSize: '0.8rem',
+                      background: 'rgba(52, 211, 153, 0.1)',
+                      padding: '0.75rem',
+                      borderRadius: 'var(--radius-sm)',
+                    }}
+                  >
                     <div>Escrow deposit confirmed on Stellar Testnet!</div>
                     <a
                       href={`https://stellar.expert/explorer/testnet/tx/${commitTxHash}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      style={{ color: '#38bdf8', fontSize: '0.75rem', display: 'inline-flex', alignItems: 'center', gap: '4px', marginTop: '0.25rem' }}
+                      style={{
+                        color: '#38bdf8',
+                        fontSize: '0.75rem',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        marginTop: '0.25rem',
+                      }}
                     >
                       View Tx {commitTxHash.slice(0, 10)}... <ExternalLink size={12} />
                     </a>
@@ -671,7 +863,9 @@ export const CircleDetailModal: React.FC<CircleDetailModalProps> = ({
                   className="btn btn-primary"
                   style={{ width: '100%', padding: '0.75rem' }}
                 >
-                  {commitStatus === 'PENDING' ? 'Escrowing Deposit On-Chain...' : `Commit ${commitQty} Units (${totalCommitCost} XLM)`}
+                  {commitStatus === 'PENDING'
+                    ? 'Escrowing Deposit On-Chain...'
+                    : `Commit ${commitQty} Units (${totalCommitCost} XLM)`}
                 </button>
               </form>
             </div>
@@ -682,12 +876,28 @@ export const CircleDetailModal: React.FC<CircleDetailModalProps> = ({
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               {/* Existing Offers Table */}
               <div>
-                <h4 style={{ fontSize: '0.95rem', fontWeight: 600, color: '#fff', marginBottom: '0.75rem' }}>
+                <h4
+                  style={{
+                    fontSize: '0.95rem',
+                    fontWeight: 600,
+                    color: '#fff',
+                    marginBottom: '0.75rem',
+                  }}
+                >
                   Competing Seller Quotes ({offers.length})
                 </h4>
 
                 {offers.length === 0 ? (
-                  <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem', padding: '1rem', background: 'rgba(0,0,0,0.2)', borderRadius: 'var(--radius-sm)', textAlign: 'center' }}>
+                  <div
+                    style={{
+                      color: 'var(--text-muted)',
+                      fontSize: '0.85rem',
+                      padding: '1rem',
+                      background: 'rgba(0,0,0,0.2)',
+                      borderRadius: 'var(--radius-sm)',
+                      textAlign: 'center',
+                    }}
+                  >
                     No seller quotes submitted yet. Be the first supplier to quote!
                   </div>
                 ) : (
@@ -695,14 +905,19 @@ export const CircleDetailModal: React.FC<CircleDetailModalProps> = ({
                     {offers.map((off) => {
                       const rep = sellerReputations[off.seller];
                       const unitNum = parseFloat(off.unit_price_xlm);
-                      const discountPct = Math.round(((targetPriceNum - unitNum) / targetPriceNum) * 100);
+                      const discountPct = Math.round(
+                        ((targetPriceNum - unitNum) / targetPriceNum) * 100
+                      );
 
                       return (
                         <div
                           key={off.id}
                           style={{
                             background: 'rgba(255, 255, 255, 0.02)',
-                            border: off.status === 'ACCEPTED' ? '1px solid var(--success)' : '1px solid rgba(255, 255, 255, 0.08)',
+                            border:
+                              off.status === 'ACCEPTED'
+                                ? '1px solid var(--success)'
+                                : '1px solid rgba(255, 255, 255, 0.08)',
                             borderRadius: 'var(--radius-md)',
                             padding: '1rem',
                             display: 'flex',
@@ -710,23 +925,47 @@ export const CircleDetailModal: React.FC<CircleDetailModalProps> = ({
                             gap: '0.5rem',
                           }}
                         >
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                          <div
+                            style={{
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              alignItems: 'flex-start',
+                            }}
+                          >
                             <div>
                               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                <span style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--accent-secondary)' }}>
+                                <span
+                                  style={{
+                                    fontWeight: 700,
+                                    fontSize: '1.1rem',
+                                    color: 'var(--accent-secondary)',
+                                  }}
+                                >
                                   {off.unit_price_xlm} XLM/unit
                                 </span>
                                 {discountPct > 0 && (
-                                  <span className="badge badge-success" style={{ fontSize: '0.7rem' }}>
+                                  <span
+                                    className="badge badge-success"
+                                    style={{ fontSize: '0.7rem' }}
+                                  >
                                     {discountPct}% discount
                                   </span>
                                 )}
-                                <span className={`badge ${off.status === 'ACCEPTED' ? 'badge-success' : 'badge-demo'}`}>
+                                <span
+                                  className={`badge ${off.status === 'ACCEPTED' ? 'badge-success' : 'badge-demo'}`}
+                                >
                                   {off.status}
                                 </span>
                               </div>
-                              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
-                                Volume offered: {off.volume} units | Lead time: {off.lead_time_days} days
+                              <div
+                                style={{
+                                  fontSize: '0.75rem',
+                                  color: 'var(--text-muted)',
+                                  marginTop: '0.2rem',
+                                }}
+                              >
+                                Volume offered: {off.volume} units | Lead time: {off.lead_time_days}{' '}
+                                days
                               </div>
                             </div>
 
@@ -758,9 +997,18 @@ export const CircleDetailModal: React.FC<CircleDetailModalProps> = ({
                             <span style={{ color: 'var(--text-muted)', fontFamily: 'monospace' }}>
                               Seller: {off.seller.slice(0, 8)}...{off.seller.slice(-6)}
                             </span>
-                            <span style={{ color: '#38bdf8', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <span
+                              style={{
+                                color: '#38bdf8',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '4px',
+                              }}
+                            >
                               <ShieldCheck size={12} />
-                              {rep ? `${rep.scorePercentage}% Rep (${rep.successful_deals} settled)` : 'Verified Seller'}
+                              {rep
+                                ? `${rep.scorePercentage}% Rep (${rep.successful_deals} settled)`
+                                : 'Verified Seller'}
                             </span>
                           </div>
                         </div>
@@ -772,14 +1020,37 @@ export const CircleDetailModal: React.FC<CircleDetailModalProps> = ({
 
               {/* Submit Seller Quote Form */}
               <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '1rem' }}>
-                <h4 style={{ fontSize: '0.95rem', fontWeight: 600, color: '#fff', marginBottom: '0.75rem' }}>
+                <h4
+                  style={{
+                    fontSize: '0.95rem',
+                    fontWeight: 600,
+                    color: '#fff',
+                    marginBottom: '0.75rem',
+                  }}
+                >
                   Submit Competing Seller Quote
                 </h4>
 
-                <form onSubmit={handleOfferSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem' }}>
+                <form
+                  onSubmit={handleOfferSubmit}
+                  style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}
+                >
+                  <div
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(3, 1fr)',
+                      gap: '0.75rem',
+                    }}
+                  >
                     <div>
-                      <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>
+                      <label
+                        style={{
+                          display: 'block',
+                          fontSize: '0.75rem',
+                          color: 'var(--text-muted)',
+                          marginBottom: '0.25rem',
+                        }}
+                      >
                         Offered Unit Price (XLM)
                       </label>
                       <input
@@ -791,7 +1062,14 @@ export const CircleDetailModal: React.FC<CircleDetailModalProps> = ({
                       />
                     </div>
                     <div>
-                      <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>
+                      <label
+                        style={{
+                          display: 'block',
+                          fontSize: '0.75rem',
+                          color: 'var(--text-muted)',
+                          marginBottom: '0.25rem',
+                        }}
+                      >
                         Available Volume
                       </label>
                       <input
@@ -804,7 +1082,14 @@ export const CircleDetailModal: React.FC<CircleDetailModalProps> = ({
                       />
                     </div>
                     <div>
-                      <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>
+                      <label
+                        style={{
+                          display: 'block',
+                          fontSize: '0.75rem',
+                          color: 'var(--text-muted)',
+                          marginBottom: '0.25rem',
+                        }}
+                      >
                         Lead Time (Days)
                       </label>
                       <input
@@ -819,19 +1104,41 @@ export const CircleDetailModal: React.FC<CircleDetailModalProps> = ({
                   </div>
 
                   {offerError && (
-                    <div style={{ color: '#f87171', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                    <div
+                      style={{
+                        color: '#f87171',
+                        fontSize: '0.8rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.35rem',
+                      }}
+                    >
                       <AlertCircle size={14} /> {offerError}
                     </div>
                   )}
 
                   {offerStatus === 'SUCCESS' && offerTxHash && (
-                    <div style={{ color: '#34d399', fontSize: '0.8rem', background: 'rgba(52, 211, 153, 0.1)', padding: '0.75rem', borderRadius: 'var(--radius-sm)' }}>
+                    <div
+                      style={{
+                        color: '#34d399',
+                        fontSize: '0.8rem',
+                        background: 'rgba(52, 211, 153, 0.1)',
+                        padding: '0.75rem',
+                        borderRadius: 'var(--radius-sm)',
+                      }}
+                    >
                       <div>Seller offer submitted on-chain!</div>
                       <a
                         href={`https://stellar.expert/explorer/testnet/tx/${offerTxHash}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        style={{ color: '#38bdf8', fontSize: '0.75rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                        style={{
+                          color: '#38bdf8',
+                          fontSize: '0.75rem',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '4px',
+                        }}
                       >
                         View Tx {offerTxHash.slice(0, 10)}... <ExternalLink size={12} />
                       </a>
@@ -844,7 +1151,9 @@ export const CircleDetailModal: React.FC<CircleDetailModalProps> = ({
                     className="btn btn-primary"
                     style={{ padding: '0.65rem', fontSize: '0.85rem' }}
                   >
-                    {offerStatus === 'PENDING' ? 'Submitting Quote On-Chain...' : 'Broadcast Seller Quote to Deal Engine'}
+                    {offerStatus === 'PENDING'
+                      ? 'Submitting Quote On-Chain...'
+                      : 'Broadcast Seller Quote to Deal Engine'}
                   </button>
                 </form>
               </div>
@@ -865,40 +1174,74 @@ export const CircleDetailModal: React.FC<CircleDetailModalProps> = ({
                   gap: '0.75rem',
                 }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}>
+                <div
+                  style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}
+                >
                   <span style={{ color: 'var(--text-muted)' }}>Deal Engine Contract Status:</span>
-                  <span style={{ fontWeight: 700, color: '#38bdf8' }}>{deal?.status || circle.status}</span>
+                  <span style={{ fontWeight: 700, color: '#38bdf8' }}>
+                    {deal?.status || circle.status}
+                  </span>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}>
+                <div
+                  style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}
+                >
                   <span style={{ color: 'var(--text-muted)' }}>Quorum Condition:</span>
                   <span style={{ fontWeight: 600, color: isQuorumReached ? '#34d399' : '#f87171' }}>
                     {currentVolume} / {minVolume} units ({isQuorumReached ? 'Met' : 'Pending'})
                   </span>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}>
+                <div
+                  style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}
+                >
                   <span style={{ color: 'var(--text-muted)' }}>Escrow Custody Held:</span>
-                  <span style={{ fontWeight: 700, color: 'var(--accent-secondary)' }}>{totalEscrowXlm} XLM</span>
+                  <span style={{ fontWeight: 700, color: 'var(--accent-secondary)' }}>
+                    {totalEscrowXlm} XLM
+                  </span>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}>
+                <div
+                  style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}
+                >
                   <span style={{ color: 'var(--text-muted)' }}>Accepted Offer ID:</span>
                   <span>{deal?.accepted_offer_id ? `#${deal.accepted_offer_id}` : 'None'}</span>
                 </div>
               </div>
 
               {settleError && (
-                <div style={{ color: '#f87171', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                <div
+                  style={{
+                    color: '#f87171',
+                    fontSize: '0.8rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.35rem',
+                  }}
+                >
                   <AlertCircle size={14} /> {settleError}
                 </div>
               )}
 
               {settleStatus === 'SUCCESS' && settleTxHash && (
-                <div style={{ color: '#34d399', fontSize: '0.8rem', background: 'rgba(52, 211, 153, 0.1)', padding: '0.75rem', borderRadius: 'var(--radius-sm)' }}>
+                <div
+                  style={{
+                    color: '#34d399',
+                    fontSize: '0.8rem',
+                    background: 'rgba(52, 211, 153, 0.1)',
+                    padding: '0.75rem',
+                    borderRadius: 'var(--radius-sm)',
+                  }}
+                >
                   <div>Transaction verified and confirmed on Stellar Testnet!</div>
                   <a
                     href={`https://stellar.expert/explorer/testnet/tx/${settleTxHash}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    style={{ color: '#38bdf8', fontSize: '0.75rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                    style={{
+                      color: '#38bdf8',
+                      fontSize: '0.75rem',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                    }}
                   >
                     View Tx {settleTxHash.slice(0, 10)}... <ExternalLink size={12} />
                   </a>
@@ -906,20 +1249,24 @@ export const CircleDetailModal: React.FC<CircleDetailModalProps> = ({
               )}
 
               {/* Settlement Button */}
-              {isQuorumReached && deal?.status !== 'SETTLED' && offers.some((o) => o.status === 'ACCEPTED') && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    const winning = offers.find((o) => o.status === 'ACCEPTED');
-                    if (winning) handleSettleDeal(winning.id);
-                  }}
-                  disabled={settleStatus === 'PENDING'}
-                  className="btn btn-primary"
-                  style={{ width: '100%', padding: '0.75rem' }}
-                >
-                  {settleStatus === 'PENDING' ? 'Executing Settlement...' : 'Release Escrow Payout & Settle Deal'}
-                </button>
-              )}
+              {isQuorumReached &&
+                deal?.status !== 'SETTLED' &&
+                offers.some((o) => o.status === 'ACCEPTED') && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const winning = offers.find((o) => o.status === 'ACCEPTED');
+                      if (winning) handleSettleDeal(winning.id);
+                    }}
+                    disabled={settleStatus === 'PENDING'}
+                    className="btn btn-primary"
+                    style={{ width: '100%', padding: '0.75rem' }}
+                  >
+                    {settleStatus === 'PENDING'
+                      ? 'Executing Settlement...'
+                      : 'Release Escrow Payout & Settle Deal'}
+                  </button>
+                )}
 
               {/* Refund Button */}
               {(circle.isExpired || deal?.status === 'CANCELLED') && deal?.status !== 'SETTLED' && (
@@ -930,7 +1277,9 @@ export const CircleDetailModal: React.FC<CircleDetailModalProps> = ({
                   className="btn btn-secondary"
                   style={{ width: '100%', padding: '0.75rem' }}
                 >
-                  {settleStatus === 'PENDING' ? 'Claiming Refund...' : 'Claim 100% Buyer Escrow Refund'}
+                  {settleStatus === 'PENDING'
+                    ? 'Claiming Refund...'
+                    : 'Claim 100% Buyer Escrow Refund'}
                 </button>
               )}
             </div>

@@ -47,4 +47,3 @@ describe('SubmitOfferModal', () => {
     expect(element.props.assetCode).toBe('USDC');
   });
 });
-

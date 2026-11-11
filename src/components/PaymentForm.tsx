@@ -106,7 +106,14 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({
 
   return (
     <div className="glass-card" id="payment-card">
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: '0.5rem',
+        }}
+      >
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <Send size={20} color="var(--accent-primary-light)" />
           <h2 style={{ fontSize: '1.2rem', fontWeight: 600 }}>Stellar Testnet Payment</h2>
@@ -114,7 +121,8 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({
         <span className="badge badge-testnet">XLM Native</span>
       </div>
       <p className="section-subtitle">
-        Execute verified payments on Stellar Testnet to fund demand circles or test ledger settlements.
+        Execute verified payments on Stellar Testnet to fund demand circles or test ledger
+        settlements.
       </p>
 
       {/* Confirmation View */}
@@ -129,7 +137,9 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({
             marginBottom: '1.5rem',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '1rem' }}>
+          <div
+            style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '1rem' }}
+          >
             <CheckCircle2 size={24} color="#34d399" />
             <div>
               <h3 style={{ fontSize: '1.1rem', color: '#34d399' }}>Transaction Confirmed!</h3>
@@ -203,7 +213,10 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({
             <span style={{ fontWeight: 600, color: '#fca5a5', fontSize: '0.9rem' }}>
               Transaction Failed
             </span>
-            <p id="tx-error-message" style={{ color: '#f87171', fontSize: '0.825rem', marginTop: '0.2rem' }}>
+            <p
+              id="tx-error-message"
+              style={{ color: '#f87171', fontSize: '0.825rem', marginTop: '0.2rem' }}
+            >
               {errorMessage}
             </p>
           </div>
@@ -229,8 +242,10 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({
           <div>
             <div style={{ fontWeight: 600, fontSize: '0.95rem', color: '#c7d2fe' }}>
               {paymentStatus === 'BUILDING_TRANSACTION' && 'Constructing Stellar Transaction...'}
-              {paymentStatus === 'AWAITING_WALLET_SIGNATURE' && 'Please Approve in Freighter Wallet...'}
-              {paymentStatus === 'SUBMITTING_TO_TESTNET' && 'Broadcasting to Stellar Testnet Ledger...'}
+              {paymentStatus === 'AWAITING_WALLET_SIGNATURE' &&
+                'Please Approve in Freighter Wallet...'}
+              {paymentStatus === 'SUBMITTING_TO_TESTNET' &&
+                'Broadcasting to Stellar Testnet Ledger...'}
               {paymentStatus === 'VALIDATING' && 'Validating parameters...'}
             </div>
             <p style={{ fontSize: '0.8rem', color: '#a5b4fc' }}>
@@ -244,8 +259,19 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({
       <form onSubmit={handleSubmit} noValidate>
         {/* Recipient Address */}
         <div className="form-group">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-            <label htmlFor="destination-address-input" className="form-label" style={{ marginBottom: 0 }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: '0.5rem',
+            }}
+          >
+            <label
+              htmlFor="destination-address-input"
+              className="form-label"
+              style={{ marginBottom: 0 }}
+            >
               Recipient Stellar Public Address (G...)
             </label>
             <button
@@ -285,12 +311,22 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({
 
         {/* XLM Amount */}
         <div className="form-group">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: '0.5rem',
+            }}
+          >
             <label htmlFor="amount-input" className="form-label" style={{ marginBottom: 0 }}>
               Payment Amount (XLM)
             </label>
             <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>
-              Spendable: <span style={{ color: 'var(--text-muted)', fontWeight: 600 }}>{maxSendable.toFixed(4)} XLM</span>
+              Spendable:{' '}
+              <span style={{ color: 'var(--text-muted)', fontWeight: 600 }}>
+                {maxSendable.toFixed(4)} XLM
+              </span>
             </div>
           </div>
           <div style={{ position: 'relative' }}>
@@ -338,7 +374,11 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({
             <button
               type="button"
               className="btn btn-secondary"
-              style={{ padding: '0.25rem 0.65rem', fontSize: '0.75rem', color: 'var(--accent-primary-light)' }}
+              style={{
+                padding: '0.25rem 0.65rem',
+                fontSize: '0.75rem',
+                color: 'var(--accent-primary-light)',
+              }}
               onClick={handleMaxAmount}
               disabled={isProcessing || maxSendable <= 0}
             >
@@ -390,11 +430,15 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({
             color: 'var(--text-dim)',
           }}
         >
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.35rem' }}>
+          <div
+            style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.35rem' }}
+          >
             <span>Network Base Fee</span>
             <span style={{ color: 'var(--text-main)', fontFamily: 'monospace' }}>0.00001 XLM</span>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.35rem' }}>
+          <div
+            style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.35rem' }}
+          >
             <span>Required Base Reserve</span>
             <span style={{ color: 'var(--text-main)', fontFamily: 'monospace' }}>1.00000 XLM</span>
           </div>

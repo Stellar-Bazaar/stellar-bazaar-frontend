@@ -20,9 +20,7 @@ export const SavingsIndicator: React.FC<SavingsIndicatorProps> = ({
     return null;
   }
 
-  const formattedSaved = savedAmountStroops
-    ? formatAssetAmount(savedAmountStroops)
-    : null;
+  const formattedSaved = savedAmountStroops ? formatAssetAmount(savedAmountStroops) : null;
 
   const sizeStyles = {
     sm: 'text-[10px] px-2 py-0.5 space-x-1',
@@ -58,4 +56,3 @@ export const SavingsIndicator: React.FC<SavingsIndicatorProps> = ({
     </div>
   );
 };
-

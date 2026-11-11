@@ -27,6 +27,7 @@ When a merchant submits an offer via `SubmitOfferModal` to the Soroban contract,
 ## 3. Competitive Bid Comparison (`OfferComparisonModal`)
 
 Buyers evaluate submitted bids through the comparison interface, which automatically computes standout metrics:
+
 - **Best Price Badge**: Highlights the merchant providing the lowest per-unit quote.
 - **Fastest Fulfillment Badge**: Highlights the supplier guaranteeing the lowest lead time.
 - **Cooperative Savings Calculation**:
@@ -47,22 +48,22 @@ $$\text{Score} = \text{Clamp}_{0}^{100}\left(\text{Base Score} + \text{Volume Bo
 
 ### Reputation Tiers
 
-| Tier | Minimum Score | Minimum Deals | Dispute Invariant | Badge Color |
-|---|---|---|---|---|
-| **Sovereign Merchant** | $\ge 90$ | 20 deals | 0 unresolved disputes | Neon Cyan (`#06b6d4`) |
-| **Top Trader** | $\ge 75$ | 5 deals | Any | Emerald (`#10b981`) |
-| **Verified Merchant** | $\ge 60$ | 1 deal | Any | Blue (`#3b82f6`) |
-| **Novice Merchant** | $< 60$ | 0 deals | Initial Baseline | Slate (`#94a3b8`) |
+| Tier                   | Minimum Score | Minimum Deals | Dispute Invariant     | Badge Color           |
+| ---------------------- | ------------- | ------------- | --------------------- | --------------------- |
+| **Sovereign Merchant** | $\ge 90$      | 20 deals      | 0 unresolved disputes | Neon Cyan (`#06b6d4`) |
+| **Top Trader**         | $\ge 75$      | 5 deals       | Any                   | Emerald (`#10b981`)   |
+| **Verified Merchant**  | $\ge 60$      | 1 deal        | Any                   | Blue (`#3b82f6`)      |
+| **Novice Merchant**    | $< 60$        | 0 deals       | Initial Baseline      | Slate (`#94a3b8`)     |
 
 ---
 
 ## 5. Two-Step Deal Settlement & Inspection Window
 
 Once an accepted seller fulfills an order:
+
 1. **Fulfillment Notice**: Seller triggers `mark_delivered` on Soroban.
 2. **Inspection Period**: An on-chain timer (e.g. 24 hours / 17,280 ledgers) locks escrow while buyers inspect physical or digital deliverables.
 3. **Paths to Resolution**:
    - **Early Confirmation**: Buyers click `Confirm Satisfaction`, triggering immediate release of wholesale payment to the merchant and surplus rebates to buyers.
    - **Auto-Settlement on Expiry**: If no dispute is filed before the ledger timestamp elapses, any participant or keeper can trigger `settle_deal` automatically.
    - **Dispute Mediation**: If goods fail specifications, buyers trigger `dispute_deal`. Funds remain securely locked in escrow until the protocol arbitrator enters a resolution verdict.
-

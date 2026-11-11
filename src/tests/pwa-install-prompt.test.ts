@@ -34,4 +34,3 @@ describe('PwaInstallPrompt', () => {
     expect(element.props.className).toBe('my-install-prompt');
   });
 });
-

@@ -13,6 +13,7 @@ All contributors are expected to adhere to our [Code of Conduct](CODE_OF_CONDUCT
 ## 2. Prerequisites & Environment
 
 Before getting started, make sure you have:
+
 - **Node.js**: `v20.x` or higher
 - **Package Manager**: `pnpm` (v9+)
 - A Stellar wallet browser extension installed for testing (e.g. [Freighter](https://www.freighter.app/) or [xBull](https://xbull.app/))
@@ -46,15 +47,19 @@ Before getting started, make sure you have:
 ## 4. Development & Styling Guidelines
 
 ### Technology Choices
+
 - **UI Framework**: React 18 with TypeScript in Strict Mode.
 - **Styling**: Vanilla CSS with predefined CSS custom property tokens (`index.css`). We avoid utility CSS frameworks like Tailwind to ensure maximum bespoke design fidelity, sleek dark mode palettes, and fluid micro-animations.
+
 ### Multi-Asset & Horizon Guidelines
+
 - Always support native XLM, USDC, and EURC Stellar Asset Contracts (SACs).
 - Verify balance updates using the Horizon RPC balance parser and Friendbot funding tools.
 - Connect to the local indexer API daemon (`http://localhost:8080`) when developing analytics features.
 - Test Progressive Web App (PWA) installation and offline indicators in Chrome DevTools Application tab.
 
 ### State Management & Blockchain Principles
+
 - **Visual Polish**: Use rich glassmorphism, subtle gradients, and reactive hover feedback.
 - **Mobile-First Responsive**: All components must be fully usable across mobile (375px+), tablet, and desktop viewports.
 - **Accessibility & Semantics**: Use semantic HTML tags, accessible button labels, keyboard navigability, and clear visual loading indicators.
@@ -84,6 +89,7 @@ All tests and typechecks must pass cleanly with zero warnings or errors.
 ## 6. Commit Conventions
 
 We follow the Conventional Commits specification:
+
 - `feat: add wallet connection status modal`
 - `fix: resolve mobile overflow on seller offers table`
 - `style: enhance glassmorphism contrast on dark cards`

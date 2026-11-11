@@ -4,14 +4,10 @@ import { parseHorizonError } from '../services/stellar-horizon';
 describe('Stellar Horizon Error Interpretation', () => {
   it('parses user signature denial correctly', () => {
     const errorString = 'User denied transaction signature';
-    expect(parseHorizonError(errorString)).toBe(
-      'Transaction signature was rejected by user.'
-    );
+    expect(parseHorizonError(errorString)).toBe('Transaction signature was rejected by user.');
 
     const errorObj = { message: 'Transaction was rejected by Freighter' };
-    expect(parseHorizonError(errorObj)).toBe(
-      'Transaction signature was rejected by the wallet.'
-    );
+    expect(parseHorizonError(errorObj)).toBe('Transaction signature was rejected by the wallet.');
   });
 
   it('translates Horizon op_underfunded to human-readable message', () => {

@@ -227,4 +227,3 @@ export const SubmitOfferModal: React.FC<SubmitOfferModalProps> = ({
     </div>
   );
 };
-

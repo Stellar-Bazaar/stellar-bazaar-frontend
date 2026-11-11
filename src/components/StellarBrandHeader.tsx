@@ -22,9 +22,7 @@ export const StellarBrandHeader: React.FC<StellarBrandHeaderProps> = ({
   onOpenSearch,
   xlmBalance,
 }) => {
-  const truncatedAddress = publicKey
-    ? `${publicKey.slice(0, 4)}...${publicKey.slice(-4)}`
-    : null;
+  const truncatedAddress = publicKey ? `${publicKey.slice(0, 4)}...${publicKey.slice(-4)}` : null;
 
   return (
     <header className="w-full bg-slate-900/90 border-b border-slate-800 backdrop-blur-md sticky top-0 z-40 transition-colors">
@@ -52,9 +50,7 @@ export const StellarBrandHeader: React.FC<StellarBrandHeaderProps> = ({
                 Soroban
               </span>
             </div>
-            <span className="text-[11px] text-slate-400 -mt-0.5">
-              Cooperative Demand Circles
-            </span>
+            <span className="text-[11px] text-slate-400 -mt-0.5">Cooperative Demand Circles</span>
           </div>
         </div>
 
@@ -66,7 +62,12 @@ export const StellarBrandHeader: React.FC<StellarBrandHeaderProps> = ({
             aria-label="Search demand circles (Ctrl+K)"
           >
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
             </svg>
             <span>Search circles...</span>
             <KeyboardShortcutBadge shortcut={{ key: 'k', ctrlOrMeta: true }} />
@@ -120,7 +121,12 @@ export const StellarBrandHeader: React.FC<StellarBrandHeaderProps> = ({
               data-testid="connect-wallet-btn"
             >
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                />
               </svg>
               <span>Connect Wallet</span>
             </button>

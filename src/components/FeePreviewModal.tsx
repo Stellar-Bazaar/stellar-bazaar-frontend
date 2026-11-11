@@ -77,13 +77,19 @@ export const FeePreviewModal: React.FC<FeePreviewModalProps> = ({
               <div className="flex justify-between items-center text-xs">
                 <span className="text-blue-800 dark:text-blue-300">Base Inclusion Fee:</span>
                 <span className="font-mono font-medium text-blue-900 dark:text-blue-100">
-                  {formatAssetAmount(BigInt(baseFeeStroops), 'XLM', { minDecimals: 7, maxDecimals: 7 })}
+                  {formatAssetAmount(BigInt(baseFeeStroops), 'XLM', {
+                    minDecimals: 7,
+                    maxDecimals: 7,
+                  })}
                 </span>
               </div>
               <div className="flex justify-between items-center text-xs">
                 <span className="text-blue-800 dark:text-blue-300">Soroban Resource Fee:</span>
                 <span className="font-mono font-medium text-blue-900 dark:text-blue-100">
-                  {formatAssetAmount(simulation.minResourceFeeStroops, 'XLM', { minDecimals: 7, maxDecimals: 7 })}
+                  {formatAssetAmount(simulation.minResourceFeeStroops, 'XLM', {
+                    minDecimals: 7,
+                    maxDecimals: 7,
+                  })}
                 </span>
               </div>
               <div className="flex justify-between items-center text-xs pt-2 border-t border-blue-200/60 dark:border-blue-800/60">
@@ -154,4 +160,3 @@ export const FeePreviewModal: React.FC<FeePreviewModalProps> = ({
     </div>
   );
 };
-

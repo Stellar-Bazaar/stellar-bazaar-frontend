@@ -69,7 +69,9 @@ export const OfferComparisonModal: React.FC<OfferComparisonModalProps> = ({
               </h2>
             </div>
             <p className="text-xs text-slate-400 mt-1">
-              Evaluating bids for: <span className="text-cyan-300 font-semibold">{circleTitle}</span> ({offers.length} bid{offers.length !== 1 ? 's' : ''})
+              Evaluating bids for:{' '}
+              <span className="text-cyan-300 font-semibold">{circleTitle}</span> ({offers.length}{' '}
+              bid{offers.length !== 1 ? 's' : ''})
             </p>
           </div>
           <button
@@ -88,7 +90,8 @@ export const OfferComparisonModal: React.FC<OfferComparisonModalProps> = ({
               <span className="text-3xl block mb-2">📦</span>
               <h3 className="text-sm font-semibold text-slate-300">No Merchant Bids Yet</h3>
               <p className="text-xs text-slate-500 max-w-xs mx-auto mt-1">
-                Verified merchants will submit supply bids below the target ceiling once quorum builds.
+                Verified merchants will submit supply bids below the target ceiling once quorum
+                builds.
               </p>
             </div>
           ) : (
@@ -131,9 +134,7 @@ export const OfferComparisonModal: React.FC<OfferComparisonModalProps> = ({
 
         {/* Footer */}
         <div className="pt-4 border-t border-slate-800 shrink-0 flex items-center justify-between text-xs text-slate-400">
-          <span>
-            Accepted bids lock in wholesale pricing and start fulfillment escrow.
-          </span>
+          <span>Accepted bids lock in wholesale pricing and start fulfillment escrow.</span>
           <button
             onClick={onClose}
             className="px-4 py-2 bg-slate-800 hover:bg-slate-750 text-slate-200 rounded-xl transition"
@@ -145,4 +146,3 @@ export const OfferComparisonModal: React.FC<OfferComparisonModalProps> = ({
     </div>
   );
 };
-

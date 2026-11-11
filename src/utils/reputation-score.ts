@@ -3,11 +3,7 @@
  * Weights on-chain Soroban deal completion, escrow volume, and dispute records.
  */
 
-export type ReputationTier =
-  | 'NOVICE'
-  | 'VERIFIED'
-  | 'TOP_TRADER'
-  | 'SOVEREIGN_MERCHANT';
+export type ReputationTier = 'NOVICE' | 'VERIFIED' | 'TOP_TRADER' | 'SOVEREIGN_MERCHANT';
 
 export interface SellerStats {
   successfulDeals: number;
@@ -42,7 +38,7 @@ export function calculateReputationScore(stats: SellerStats): ReputationAnalysis
 
   // Base fulfillment rate (0 - 70 points contribution)
   const fulfillmentRate = (successfulDeals / totalDeals) * 100;
-  let basePoints = (fulfillmentRate * 0.7);
+  let basePoints = fulfillmentRate * 0.7;
 
   // Dispute mitigation: If disputes were resolved in seller's favor, recover half penalty
   const unresolvedDisputes = Math.max(0, disputedDeals - resolvedInFavor);
@@ -97,4 +93,3 @@ export function calculateReputationScore(stats: SellerStats): ReputationAnalysis
     tierColor,
   };
 }
-

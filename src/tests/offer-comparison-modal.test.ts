@@ -66,4 +66,3 @@ describe('OfferComparisonModal', () => {
     expect(element.props.isCircleCreator).toBe(true);
   });
 });
-

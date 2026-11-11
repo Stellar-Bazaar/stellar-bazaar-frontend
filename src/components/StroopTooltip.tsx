@@ -55,12 +55,8 @@ export const StroopTooltip: React.FC<StroopTooltipProps> = ({
           className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2.5 bg-gray-900 text-white dark:bg-gray-800 border border-gray-700 text-center rounded-lg shadow-xl text-xs z-30 pointer-events-none"
           role="status"
         >
-          <span className="font-mono font-bold block text-blue-300">
-            {stroopFormatted} Stroops
-          </span>
-          <span className="text-[11px] text-gray-300 block mt-0.5">
-            = {xlmFormatted}
-          </span>
+          <span className="font-mono font-bold block text-blue-300">{stroopFormatted} Stroops</span>
+          <span className="text-[11px] text-gray-300 block mt-0.5">= {xlmFormatted}</span>
           <span className="text-[10px] text-gray-400 block pt-1 mt-1 border-t border-gray-700/60">
             1 XLM = 10,000,000 Stroops
           </span>
@@ -69,4 +65,3 @@ export const StroopTooltip: React.FC<StroopTooltipProps> = ({
     </span>
   );
 };
-

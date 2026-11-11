@@ -96,7 +96,8 @@ export function validatePaymentForm(
   if (!values.destinationAddress || !values.destinationAddress.trim()) {
     errors.destinationAddress = 'Recipient Stellar address is required.';
   } else if (!isValidStellarAddress(values.destinationAddress)) {
-    errors.destinationAddress = 'Invalid Stellar public address (must start with "G" and be 56 characters).';
+    errors.destinationAddress =
+      'Invalid Stellar public address (must start with "G" and be 56 characters).';
   } else if (sourceAddress && values.destinationAddress.trim() === sourceAddress.trim()) {
     errors.destinationAddress = 'Destination address cannot be your own wallet address.';
   }
@@ -128,7 +129,6 @@ export function shortenAddress(address: string, chars = 4): string {
   return `${address.slice(0, chars)}...${address.slice(-chars)}`;
 }
 
-
 export const STROOPS_PER_XLM = 10_000_000n;
 
 /**
@@ -136,7 +136,8 @@ export const STROOPS_PER_XLM = 10_000_000n;
  * Handles zero, fractional, and large amounts accurately using BigInt.
  */
 export function formatStroops(stroops: bigint | number | string): string {
-  const bigStroops = typeof stroops === 'bigint' ? stroops : BigInt(Math.floor(Number(stroops) || 0));
+  const bigStroops =
+    typeof stroops === 'bigint' ? stroops : BigInt(Math.floor(Number(stroops) || 0));
   if (bigStroops === 0n) return '0.0000000';
   const isNegative = bigStroops < 0n;
   const abs = isNegative ? -bigStroops : bigStroops;
@@ -157,7 +158,6 @@ export function xlmToStroops(xlmStr: string): bigint {
   return total;
 }
 
-
 /**
  * Validates seller quote lead time in days.
  * Must be a positive integer between 1 and 365 days.
@@ -167,7 +167,8 @@ export function validateLeadTimeDays(leadTimeDays: number | string): {
   error?: string;
   parsedDays?: number;
 } {
-  const num = typeof leadTimeDays === 'number' ? leadTimeDays : parseInt(String(leadTimeDays).trim(), 10);
+  const num =
+    typeof leadTimeDays === 'number' ? leadTimeDays : parseInt(String(leadTimeDays).trim(), 10);
   if (isNaN(num)) {
     return { isValid: false, error: 'Lead time must be a valid integer.' };
   }

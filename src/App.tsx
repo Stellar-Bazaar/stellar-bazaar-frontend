@@ -8,17 +8,8 @@ import { WalletModal } from './components/WalletModal';
 import { CreateCircleModal } from './components/CreateCircleModal';
 import { CircleDetailModal } from './components/CircleDetailModal';
 import { Toast, ToastMessage } from './components/Toast';
-import {
-  WalletAccount,
-  WalletStatus,
-  WalletType,
-  AccountBalanceState,
-} from './types/wallet';
-import {
-  PaymentFormValues,
-  PaymentStatus,
-  TransactionConfirmation,
-} from './types/payment';
+import { WalletAccount, WalletStatus, WalletType, AccountBalanceState } from './types/wallet';
+import { PaymentFormValues, PaymentStatus, TransactionConfirmation } from './types/payment';
 import { OnChainDemandCircle } from './types/contract';
 import {
   fetchAccountBalances,
@@ -57,7 +48,9 @@ export const App: React.FC = () => {
 
   // Demand Circle Modals & Sync
   const [createCircleModalOpen, setCreateCircleModalOpen] = useState(false);
-  const [selectedCircleDetails, setSelectedCircleDetails] = useState<OnChainDemandCircle | null>(null);
+  const [selectedCircleDetails, setSelectedCircleDetails] = useState<OnChainDemandCircle | null>(
+    null
+  );
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   // Toasts
@@ -210,7 +203,10 @@ export const App: React.FC = () => {
 
   // Handle Circle Created
   const handleCircleCreated = (circleId: number, txHash: string) => {
-    addToast('SUCCESS', `Demand Circle #${circleId} recorded on Soroban! Tx: ${txHash.slice(0, 8)}...`);
+    addToast(
+      'SUCCESS',
+      `Demand Circle #${circleId} recorded on Soroban! Tx: ${txHash.slice(0, 8)}...`
+    );
     setRefreshTrigger((prev) => prev + 1);
   };
 
@@ -282,7 +278,9 @@ export const App: React.FC = () => {
               lineHeight: 1.6,
             }}
           >
-            Stellar Bazaar coordinates collective consumer demand into Demand Circles. Sellers submit competitive fulfillment quotes, and Soroban smart contracts enforce commercial rules and escrow settlement.
+            Stellar Bazaar coordinates collective consumer demand into Demand Circles. Sellers
+            submit competitive fulfillment quotes, and Soroban smart contracts enforce commercial
+            rules and escrow settlement.
           </p>
         </div>
 
@@ -351,7 +349,8 @@ export const App: React.FC = () => {
                 lineHeight: 1.6,
               }}
             >
-              Connect with Freighter, xBull, Albedo, Hana, or an instant Testnet Companion account to retrieve your real Testnet balance and interact with Soroban smart contracts.
+              Connect with Freighter, xBull, Albedo, Hana, or an instant Testnet Companion account
+              to retrieve your real Testnet balance and interact with Soroban smart contracts.
             </p>
 
             <button

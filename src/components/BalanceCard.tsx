@@ -19,14 +19,25 @@ export const BalanceCard: React.FC<BalanceCardProps> = ({
 
   // Format timestamp
   const formattedTime = lastFetchedAt
-    ? lastFetchedAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+    ? lastFetchedAt.toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      })
     : 'Never';
 
   const otherAssets = balances.filter((b) => !b.isNative);
 
   return (
     <div className="glass-card" id="balance-card">
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: '1.25rem',
+        }}
+      >
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <Coins size={20} color="var(--accent-primary-light)" />
           <h2 style={{ fontSize: '1.2rem', fontWeight: 600 }}>Stellar Testnet Balances</h2>
@@ -55,10 +66,19 @@ export const BalanceCard: React.FC<BalanceCardProps> = ({
           marginBottom: '1rem',
         }}
       >
-        <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+        <span
+          style={{
+            fontSize: '0.8rem',
+            color: 'var(--text-muted)',
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em',
+          }}
+        >
           Native Stellar Lumens
         </span>
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.65rem', marginTop: '0.25rem' }}>
+        <div
+          style={{ display: 'flex', alignItems: 'baseline', gap: '0.65rem', marginTop: '0.25rem' }}
+        >
           <span
             id="xlm-balance-display"
             style={{
@@ -69,17 +89,32 @@ export const BalanceCard: React.FC<BalanceCardProps> = ({
               letterSpacing: '-0.02em',
             }}
           >
-            {Number(xlm).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 7 })}
+            {Number(xlm).toLocaleString('en-US', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 7,
+            })}
           </span>
-          <span style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--accent-primary-light)' }}>
+          <span
+            style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--accent-primary-light)' }}
+          >
             XLM
           </span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.5rem' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginTop: '0.5rem',
+          }}
+        >
           <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>
             Network: Stellar Testnet
           </span>
-          <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }} id="last-fetched-timestamp">
+          <span
+            style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}
+            id="last-fetched-timestamp"
+          >
             Last fetched: {formattedTime}
           </span>
         </div>
@@ -103,7 +138,8 @@ export const BalanceCard: React.FC<BalanceCardProps> = ({
                 Unfunded Testnet Account
               </p>
               <p style={{ fontSize: '0.8rem', color: '#f87171', marginTop: '0.2rem' }}>
-                This account has not been activated on Stellar Testnet yet. Use Stellar Friendbot to receive 10,000 Testnet XLM instantly.
+                This account has not been activated on Stellar Testnet yet. Use Stellar Friendbot to
+                receive 10,000 Testnet XLM instantly.
               </p>
               {onFundWithFaucet && (
                 <button
@@ -156,10 +192,19 @@ export const BalanceCard: React.FC<BalanceCardProps> = ({
       {/* Trustline Assets Breakdown */}
       {otherAssets.length > 0 && (
         <div style={{ marginTop: '1rem' }}>
-          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          <span
+            style={{
+              fontSize: '0.75rem',
+              color: 'var(--text-muted)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+            }}
+          >
             Issued Assets / Trustlines
           </span>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '0.5rem' }}>
+          <div
+            style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '0.5rem' }}
+          >
             {otherAssets.map((asset, idx) => (
               <div
                 key={idx}

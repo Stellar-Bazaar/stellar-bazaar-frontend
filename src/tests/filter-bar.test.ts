@@ -1,11 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import React from 'react';
-import {
-  FilterBar,
-  CATEGORIES,
-  STATUS_OPTIONS,
-  SORT_OPTIONS,
-} from '../components/FilterBar';
+import { FilterBar, CATEGORIES, STATUS_OPTIONS, SORT_OPTIONS } from '../components/FilterBar';
 
 describe('FilterBar', () => {
   it('is exported and defined as a React component', () => {
@@ -41,4 +36,3 @@ describe('FilterBar', () => {
     expect(element.props.totalCount).toBe(14);
   });
 });
-

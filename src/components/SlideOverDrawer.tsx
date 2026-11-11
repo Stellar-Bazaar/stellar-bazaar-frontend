@@ -47,9 +47,7 @@ export const SlideOverDrawer: React.FC<SlideOverDrawerProps> = ({
             <h3 id="drawer-title" className="text-base font-bold text-slate-100">
               {title}
             </h3>
-            {subtitle && (
-              <p className="text-xs text-slate-400 mt-0.5">{subtitle}</p>
-            )}
+            {subtitle && <p className="text-xs text-slate-400 mt-0.5">{subtitle}</p>}
           </div>
           <button
             onClick={onClose}
@@ -61,18 +59,13 @@ export const SlideOverDrawer: React.FC<SlideOverDrawerProps> = ({
         </div>
 
         {/* Drawer Content Body */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-4">
-          {children}
-        </div>
+        <div className="flex-1 overflow-y-auto p-6 space-y-4">{children}</div>
 
         {/* Optional Sticky Footer */}
         {footer && (
-          <div className="p-6 border-t border-slate-800 bg-slate-900/80 shrink-0">
-            {footer}
-          </div>
+          <div className="p-6 border-t border-slate-800 bg-slate-900/80 shrink-0">{footer}</div>
         )}
       </div>
     </div>
   );
 };
-

@@ -92,7 +92,8 @@ const xbullAdapter: WalletAdapter = {
 const albedoAdapter: WalletAdapter = {
   id: 'ALBEDO',
   name: 'Albedo Web Signer',
-  description: 'Web-based delegated signature protocol. Works instantly across all browsers without extensions.',
+  description:
+    'Web-based delegated signature protocol. Works instantly across all browsers without extensions.',
   category: 'WEB',
   installUrl: 'https://albedo.link',
   badge: 'Zero-Install',
@@ -117,7 +118,9 @@ const albedoAdapter: WalletAdapter = {
       );
 
       if (!popup) {
-        return reject(new Error('Albedo popup was blocked by browser. Please allow popups for this site.'));
+        return reject(
+          new Error('Albedo popup was blocked by browser. Please allow popups for this site.')
+        );
       }
 
       const messageHandler = (event: MessageEvent) => {
@@ -164,7 +167,9 @@ const albedoAdapter: WalletAdapter = {
       );
 
       if (!popup) {
-        return reject(new Error('Albedo popup was blocked. Please allow popups to sign transaction.'));
+        return reject(
+          new Error('Albedo popup was blocked. Please allow popups to sign transaction.')
+        );
       }
 
       const messageHandler = (event: MessageEvent) => {
@@ -232,7 +237,8 @@ let activeCompanion: CompanionAccount | null = null;
 const companionAdapter: WalletAdapter = {
   id: 'COMPANION',
   name: 'Testnet Companion Mode',
-  description: 'Automated Testnet keypair funded by Friendbot. Guarantees real on-chain Testnet execution for testing.',
+  description:
+    'Automated Testnet keypair funded by Friendbot. Guarantees real on-chain Testnet execution for testing.',
   category: 'DEVELOPER',
   badge: 'Funded Sandbox',
   async isAvailable() {
@@ -307,7 +313,10 @@ export class WalletManager {
     return this.activeAccount;
   }
 
-  static async signTransaction(xdr: string, opts?: { networkPassphrase?: string }): Promise<string> {
+  static async signTransaction(
+    xdr: string,
+    opts?: { networkPassphrase?: string }
+  ): Promise<string> {
     if (!this.activeAdapter) {
       throw new Error('No active wallet connected. Please connect a Stellar wallet first.');
     }

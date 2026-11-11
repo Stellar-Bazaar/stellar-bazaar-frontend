@@ -40,4 +40,3 @@ describe('Web App Manifest (public/manifest.json)', () => {
     expect(manifest.icons.some((i: any) => i.sizes === '512x512')).toBe(true);
   });
 });
-

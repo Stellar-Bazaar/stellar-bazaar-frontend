@@ -41,8 +41,8 @@ export const ExplorerLink: React.FC<ExplorerLinkProps> = ({
   const displayValue = label
     ? label
     : truncate && value.length > 14
-    ? `${value.slice(0, 6)}...${value.slice(-6)}`
-    : value;
+      ? `${value.slice(0, 6)}...${value.slice(-6)}`
+      : value;
 
   return (
     <a
@@ -62,4 +62,3 @@ export const ExplorerLink: React.FC<ExplorerLinkProps> = ({
     </a>
   );
 };
-

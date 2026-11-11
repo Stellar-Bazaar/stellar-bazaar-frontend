@@ -76,4 +76,3 @@ export const AuthEntryViewer: React.FC<AuthEntryViewerProps> = ({
     </div>
   );
 };
-

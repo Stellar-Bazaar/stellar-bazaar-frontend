@@ -5,7 +5,8 @@ export const TestnetBanner: React.FC = () => {
   return (
     <div
       style={{
-        background: 'linear-gradient(90deg, rgba(245, 158, 11, 0.15) 0%, rgba(217, 119, 6, 0.1) 100%)',
+        background:
+          'linear-gradient(90deg, rgba(245, 158, 11, 0.15) 0%, rgba(217, 119, 6, 0.1) 100%)',
         borderBottom: '1px solid rgba(245, 158, 11, 0.3)',
         padding: '0.65rem 1.25rem',
         fontSize: '0.85rem',
@@ -23,7 +24,8 @@ export const TestnetBanner: React.FC = () => {
         <span>STELLAR TESTNET ENVIRONMENT:</span>
       </div>
       <span style={{ color: '#fde68a' }}>
-        This application operates strictly on the Stellar Testnet. All XLM tokens and transactions are test assets with zero real-world financial value.
+        This application operates strictly on the Stellar Testnet. All XLM tokens and transactions
+        are test assets with zero real-world financial value.
       </span>
       <a
         href="https://laboratory.stellar.org/#account-creator?network=test"

@@ -80,4 +80,3 @@ describe('calculateReputationScore', () => {
     expect(withResolvedInFavor.score).toBeGreaterThan(withUnresolved.score);
   });
 });
-

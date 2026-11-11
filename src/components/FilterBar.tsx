@@ -107,11 +107,11 @@ export const FilterBar: React.FC<FilterBarProps> = ({
         {/* Count Label */}
         {totalCount !== undefined && (
           <span className="text-xs text-slate-400 font-medium">
-            Showing <strong className="text-cyan-300 font-mono">{totalCount}</strong> circle{totalCount !== 1 ? 's' : ''}
+            Showing <strong className="text-cyan-300 font-mono">{totalCount}</strong> circle
+            {totalCount !== 1 ? 's' : ''}
           </span>
         )}
       </div>
     </div>
   );
 };
-

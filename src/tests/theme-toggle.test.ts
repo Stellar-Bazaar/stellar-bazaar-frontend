@@ -1,10 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import React from 'react';
-import {
-  ThemeToggle,
-  getInitialTheme,
-  applyTheme,
-} from '../components/ThemeToggle';
+import { ThemeToggle, getInitialTheme, applyTheme } from '../components/ThemeToggle';
 
 describe('ThemeToggle & utilities', () => {
   beforeEach(() => {

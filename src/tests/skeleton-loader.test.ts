@@ -31,4 +31,3 @@ describe('SkeletonLoader', () => {
     expect(rowElem.props.variant).toBe('row');
   });
 });
-

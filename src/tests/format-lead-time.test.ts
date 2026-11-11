@@ -48,4 +48,3 @@ describe('formatLeadTime', () => {
     expect(STELLAR_LEDGER_SECONDS).toBe(5);
   });
 });
-

@@ -61,20 +61,17 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   );
 
   const error = useCallback(
-    (title: string, message?: string) =>
-      showToast({ type: 'error', title, message }),
+    (title: string, message?: string) => showToast({ type: 'error', title, message }),
     [showToast]
   );
 
   const warning = useCallback(
-    (title: string, message?: string) =>
-      showToast({ type: 'warning', title, message }),
+    (title: string, message?: string) => showToast({ type: 'warning', title, message }),
     [showToast]
   );
 
   const info = useCallback(
-    (title: string, message?: string) =>
-      showToast({ type: 'info', title, message }),
+    (title: string, message?: string) => showToast({ type: 'info', title, message }),
     [showToast]
   );
 
@@ -102,4 +99,3 @@ export function useToast(): ToastContextValue {
   }
   return ctx;
 }
-

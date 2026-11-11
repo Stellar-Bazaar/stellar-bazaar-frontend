@@ -49,4 +49,3 @@ describe('useNetworkStatus', () => {
     expect(isReachable).toBe(false);
   });
 });
-

@@ -40,8 +40,8 @@ export const Toast: React.FC<ToastProps> = ({ toasts, onDismiss }) => {
               toast.type === 'SUCCESS'
                 ? 'rgba(16, 185, 129, 0.95)'
                 : toast.type === 'ERROR'
-                ? 'rgba(239, 68, 68, 0.95)'
-                : 'rgba(99, 102, 241, 0.95)',
+                  ? 'rgba(239, 68, 68, 0.95)'
+                  : 'rgba(99, 102, 241, 0.95)',
             color: '#ffffff',
             boxShadow: 'var(--shadow-lg)',
             fontSize: '0.875rem',

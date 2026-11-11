@@ -61,7 +61,10 @@ export const AssetSelector: React.FC<AssetSelectorProps> = ({
         </select>
       </div>
       <p className="mt-1 text-[11px] text-gray-500 dark:text-gray-400 truncate">
-        Soroban SAC ID: <code className="font-mono">{currentAsset.sorobanContractId.slice(0, 8)}...{currentAsset.sorobanContractId.slice(-6)}</code>
+        Soroban SAC ID:{' '}
+        <code className="font-mono">
+          {currentAsset.sorobanContractId.slice(0, 8)}...{currentAsset.sorobanContractId.slice(-6)}
+        </code>
       </p>
     </div>
   );

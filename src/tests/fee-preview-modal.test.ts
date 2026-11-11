@@ -72,4 +72,3 @@ describe('FeePreviewModal component', () => {
     expect(element.props.simulation.errorDetails).toBe('Transaction expired');
   });
 });
-

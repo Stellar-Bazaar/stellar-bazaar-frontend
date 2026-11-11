@@ -1,0 +1,10 @@
+assets
+node_modules
+dist
+target
+.cargo
+build
+coverage
+*.wasm
+pnpm-lock.yaml
+package-lock.json

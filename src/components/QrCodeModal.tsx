@@ -109,25 +109,14 @@ export const QrCodeModal: React.FC<QrCodeModalProps> = ({
               if (!active) return null;
               const r = Math.floor(idx / gridSize);
               const c = idx % gridSize;
-              return (
-                <rect
-                  key={idx}
-                  x={c}
-                  y={r}
-                  width="1"
-                  height="1"
-                  fill="#0f172a"
-                />
-              );
+              return <rect key={idx} x={c} y={r} width="1" height="1" fill="#0f172a" />;
             })}
           </svg>
         </div>
 
         {/* Value and Copy Button */}
         <div className="w-full bg-slate-800/80 border border-slate-700/60 rounded-xl p-2.5 mb-5 flex items-center justify-between">
-          <div className="truncate text-xs font-mono text-cyan-300 mr-2 select-all">
-            {qrValue}
-          </div>
+          <div className="truncate text-xs font-mono text-cyan-300 mr-2 select-all">{qrValue}</div>
           <button
             onClick={handleCopy}
             className="shrink-0 px-3 py-1 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg text-xs font-medium transition"
@@ -157,4 +146,3 @@ export const QrCodeModal: React.FC<QrCodeModalProps> = ({
     </div>
   );
 };
-

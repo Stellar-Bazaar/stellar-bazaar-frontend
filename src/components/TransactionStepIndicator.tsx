@@ -2,12 +2,7 @@ import React from 'react';
 import { ExplorerLink } from './ExplorerLink';
 
 export type TransactionStep =
-  | 'idle'
-  | 'simulating'
-  | 'signing'
-  | 'submitting'
-  | 'confirmed'
-  | 'failed';
+  'idle' | 'simulating' | 'signing' | 'submitting' | 'confirmed' | 'failed';
 
 export interface TransactionStepIndicatorProps {
   currentStep: TransactionStep;
@@ -67,8 +62,8 @@ export const TransactionStepIndicator: React.FC<TransactionStepIndicatorProps> =
             currentStep === 'confirmed'
               ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200'
               : currentStep === 'failed'
-              ? 'bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-200'
-              : 'bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-200 animate-pulse'
+                ? 'bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-200'
+                : 'bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-200 animate-pulse'
           }`}
         >
           {currentStep.toUpperCase()}
@@ -78,7 +73,8 @@ export const TransactionStepIndicator: React.FC<TransactionStepIndicatorProps> =
       <div className="grid grid-cols-4 gap-2 pt-1">
         {STEPS.map((step, idx) => {
           const isDone = activeIndex > idx || currentStep === 'confirmed';
-          const isCurrent = activeIndex === idx && currentStep !== 'confirmed' && currentStep !== 'failed';
+          const isCurrent =
+            activeIndex === idx && currentStep !== 'confirmed' && currentStep !== 'failed';
           const isFailed = currentStep === 'failed' && activeIndex === idx;
 
           return (
@@ -88,10 +84,10 @@ export const TransactionStepIndicator: React.FC<TransactionStepIndicatorProps> =
                 isDone
                   ? 'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200'
                   : isCurrent
-                  ? 'bg-blue-50 dark:bg-blue-950/40 border-blue-400 dark:border-blue-700 text-blue-900 dark:text-blue-100 ring-2 ring-blue-500/20'
-                  : isFailed
-                  ? 'bg-red-50 dark:bg-red-950/30 border-red-300 dark:border-red-800 text-red-900 dark:text-red-200'
-                  : 'bg-gray-50 dark:bg-gray-700/30 border-gray-200 dark:border-gray-700 text-gray-400'
+                    ? 'bg-blue-50 dark:bg-blue-950/40 border-blue-400 dark:border-blue-700 text-blue-900 dark:text-blue-100 ring-2 ring-blue-500/20'
+                    : isFailed
+                      ? 'bg-red-50 dark:bg-red-950/30 border-red-300 dark:border-red-800 text-red-900 dark:text-red-200'
+                      : 'bg-gray-50 dark:bg-gray-700/30 border-gray-200 dark:border-gray-700 text-gray-400'
               }`}
             >
               <span className="text-sm block mb-0.5" aria-hidden="true">
@@ -119,12 +115,9 @@ export const TransactionStepIndicator: React.FC<TransactionStepIndicatorProps> =
       {ledgerSeq && (
         <div className="flex items-center justify-between text-xs text-gray-500">
           <span>Inclusion Ledger:</span>
-          <span className="font-mono font-bold text-gray-900 dark:text-gray-100">
-            #{ledgerSeq}
-          </span>
+          <span className="font-mono font-bold text-gray-900 dark:text-gray-100">#{ledgerSeq}</span>
         </div>
       )}
     </div>
   );
 };
-

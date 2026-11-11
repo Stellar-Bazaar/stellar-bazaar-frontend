@@ -75,4 +75,3 @@ describe('local-cache', () => {
     expect(getCacheItem('item_to_remove')).toBeNull();
   });
 });
-

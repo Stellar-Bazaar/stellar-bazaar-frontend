@@ -1,8 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  calculateCircleSavings,
-  calculateBuyerSavings,
-} from '../utils/savings-calculator';
+import { calculateCircleSavings, calculateBuyerSavings } from '../utils/savings-calculator';
 
 describe('savings-calculator', () => {
   const targetPrice = 10_000_000n; // 1.0 XLM
@@ -68,4 +65,3 @@ describe('savings-calculator', () => {
     });
   });
 });
-

@@ -30,10 +30,7 @@ export function formatShortcutKey(shortcut: {
   return parts.join(isMac ? '' : '+');
 }
 
-export function useKeyboardShortcuts(
-  shortcuts: ShortcutConfig[],
-  enabled = true
-): void {
+export function useKeyboardShortcuts(shortcuts: ShortcutConfig[], enabled = true): void {
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
       if (!enabled) return;
@@ -41,9 +38,7 @@ export function useKeyboardShortcuts(
       const target = event.target as HTMLElement | null;
       const isInput =
         target &&
-        (target.tagName === 'INPUT' ||
-          target.tagName === 'TEXTAREA' ||
-          target.isContentEditable);
+        (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
 
       for (const shortcut of shortcuts) {
         if (shortcut.disabled) continue;
@@ -53,8 +48,7 @@ export function useKeyboardShortcuts(
           continue;
         }
 
-        const matchKey =
-          event.key.toLowerCase() === shortcut.key.toLowerCase();
+        const matchKey = event.key.toLowerCase() === shortcut.key.toLowerCase();
         const matchCtrlMeta = shortcut.ctrlOrMeta
           ? event.ctrlKey || event.metaKey
           : !event.ctrlKey && !event.metaKey;
@@ -79,4 +73,3 @@ export function useKeyboardShortcuts(
     };
   }, [handleKeyDown]);
 }
-

@@ -85,10 +85,7 @@ export function setCacheItem<T>(
 /**
  * Retrieves an item from cache, returning null if missing or expired.
  */
-export function getCacheItem<T>(
-  key: string,
-  storageType: 'local' | 'session' = 'local'
-): T | null {
+export function getCacheItem<T>(key: string, storageType: 'local' | 'session' = 'local'): T | null {
   const storage = getStorage(storageType);
   if (!storage) return null;
 
@@ -113,10 +110,7 @@ export function getCacheItem<T>(
 /**
  * Removes an item from cache.
  */
-export function removeCacheItem(
-  key: string,
-  storageType: 'local' | 'session' = 'local'
-): void {
+export function removeCacheItem(key: string, storageType: 'local' | 'session' = 'local'): void {
   const storage = getStorage(storageType);
   if (!storage) return;
   try {
@@ -129,9 +123,7 @@ export function removeCacheItem(
 /**
  * Purges expired items from cache storage.
  */
-export function clearExpiredCache(
-  storageType: 'local' | 'session' = 'local'
-): number {
+export function clearExpiredCache(storageType: 'local' | 'session' = 'local'): number {
   const storage = getStorage(storageType);
   if (!storage) return 0;
 

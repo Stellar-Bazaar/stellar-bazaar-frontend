@@ -5,7 +5,14 @@ const fs = require('fs');
 const EDGE_PATH = 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
 const APP_URL = 'http://localhost:3000/';
 const SCREENSHOTS_DIR = path.resolve(__dirname, '..', 'docs', 'screenshots');
-const CORE_SCREENSHOTS_DIR = path.resolve(__dirname, '..', '..', 'stellar-bazaar-core', 'docs', 'screenshots');
+const CORE_SCREENSHOTS_DIR = path.resolve(
+  __dirname,
+  '..',
+  '..',
+  'stellar-bazaar-core',
+  'docs',
+  'screenshots'
+);
 
 async function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
@@ -106,7 +113,9 @@ async function main() {
     // Click on "Seller Offers" tab inside CircleDetailModal
     await page.evaluate(() => {
       const buttons = Array.from(document.querySelectorAll('button'));
-      const offerTab = buttons.find((b) => b.textContent && b.textContent.includes('Seller Offers'));
+      const offerTab = buttons.find(
+        (b) => b.textContent && b.textContent.includes('Seller Offers')
+      );
       if (offerTab) offerTab.click();
     });
     await sleep(1000);
@@ -120,7 +129,9 @@ async function main() {
     console.log('Capturing: 07_successful_settlement_escrow.png');
     await page.evaluate(() => {
       const buttons = Array.from(document.querySelectorAll('button'));
-      const settleTab = buttons.find((b) => b.textContent && b.textContent.includes('Settlement & Escrow'));
+      const settleTab = buttons.find(
+        (b) => b.textContent && b.textContent.includes('Settlement & Escrow')
+      );
       if (settleTab) settleTab.click();
     });
     await sleep(1000);
@@ -131,7 +142,9 @@ async function main() {
     // Switch to Buyer Commitment tab to demonstrate refund and escrow protection
     await page.evaluate(() => {
       const buttons = Array.from(document.querySelectorAll('button'));
-      const buyerTab = buttons.find((b) => b.textContent && b.textContent.includes('Buyer Commitment'));
+      const buyerTab = buttons.find(
+        (b) => b.textContent && b.textContent.includes('Buyer Commitment')
+      );
       if (buyerTab) buyerTab.click();
     });
     await sleep(1000);

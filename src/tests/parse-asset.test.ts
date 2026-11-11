@@ -23,9 +23,7 @@ describe('parseAssetAmount utility', () => {
   });
 
   it('rejects more than 7 decimal places', () => {
-    expect(() => parseAssetAmount('1.12345678')).toThrow(
-      /maximum 7 decimal places/
-    );
+    expect(() => parseAssetAmount('1.12345678')).toThrow(/maximum 7 decimal places/);
   });
 
   it('rejects negative numbers and invalid strings', () => {

@@ -49,7 +49,9 @@ describe('MerchantOffer model & validation', () => {
 
     const res = validateMerchantOffer(offer, targetPrice, circleMaxVol);
     expect(res.valid).toBe(false);
-    expect(res.errors.some((e) => e.includes('exceed the demand circle target ceiling price'))).toBe(true);
+    expect(
+      res.errors.some((e) => e.includes('exceed the demand circle target ceiling price'))
+    ).toBe(true);
   });
 
   it('fails when minVolume is greater than maxVolume', () => {
@@ -94,4 +96,3 @@ describe('MerchantOffer model & validation', () => {
     expect(calculateDiscountBps(100_000_000n, 120_000_000n)).toBe(0);
   });
 });
-

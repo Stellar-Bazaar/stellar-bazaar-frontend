@@ -39,10 +39,13 @@ async function capture() {
 
   // Wait for balance to be funded (> 0 XLM)
   console.log('Waiting for balance to load from Stellar Testnet Horizon...');
-  await page.waitForFunction(() => {
-    const el = document.getElementById('xlm-balance-display');
-    return el && parseFloat(el.innerText.replace(/,/g, '')) > 0;
-  }, { timeout: 30000 });
+  await page.waitForFunction(
+    () => {
+      const el = document.getElementById('xlm-balance-display');
+      return el && parseFloat(el.innerText.replace(/,/g, '')) > 0;
+    },
+    { timeout: 30000 }
+  );
   await new Promise((r) => setTimeout(r, 1500));
 
   // 2. Connected Wallet State (Full Page Overview)

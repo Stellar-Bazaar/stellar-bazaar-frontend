@@ -46,4 +46,3 @@ describe('ReputationBadge', () => {
     expect(element.props.className).toBe('custom-badge');
   });
 });
-

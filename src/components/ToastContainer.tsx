@@ -16,8 +16,7 @@ const STYLES: Record<ToastMessage['type'], string> = {
     'bg-white dark:bg-gray-800 border-red-300 dark:border-red-700 text-gray-900 dark:text-gray-100 shadow-lg',
   warning:
     'bg-white dark:bg-gray-800 border-amber-300 dark:border-amber-700 text-gray-900 dark:text-gray-100 shadow-lg',
-  info:
-    'bg-white dark:bg-gray-800 border-blue-300 dark:border-blue-700 text-gray-900 dark:text-gray-100 shadow-lg',
+  info: 'bg-white dark:bg-gray-800 border-blue-300 dark:border-blue-700 text-gray-900 dark:text-gray-100 shadow-lg',
 };
 
 export const ToastContainer: React.FC = () => {
@@ -50,7 +49,12 @@ export const ToastContainer: React.FC = () => {
             )}
             {toast.txHash && (
               <div className="mt-1.5 pt-1 border-t border-gray-100 dark:border-gray-700">
-                <ExplorerLink type="tx" value={toast.txHash} network="testnet" label="View Transaction" />
+                <ExplorerLink
+                  type="tx"
+                  value={toast.txHash}
+                  network="testnet"
+                  label="View Transaction"
+                />
               </div>
             )}
           </div>
@@ -66,4 +70,3 @@ export const ToastContainer: React.FC = () => {
     </aside>
   );
 };
-

@@ -73,7 +73,8 @@ export const Navbar: React.FC<NavbarProps> = ({
               width: '40px',
               height: '40px',
               borderRadius: '10px',
-              background: 'linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%)',
+              background:
+                'linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -159,12 +160,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                   {walletAccount.type === 'FREIGHTER'
                     ? 'Freighter'
                     : walletAccount.type === 'XBULL'
-                    ? 'xBull'
-                    : walletAccount.type === 'ALBEDO'
-                    ? 'Albedo'
-                    : walletAccount.type === 'HANA'
-                    ? 'Hana'
-                    : 'Testnet Companion'}
+                      ? 'xBull'
+                      : walletAccount.type === 'ALBEDO'
+                        ? 'Albedo'
+                        : walletAccount.type === 'HANA'
+                          ? 'Hana'
+                          : 'Testnet Companion'}
                 </span>
               </div>
 

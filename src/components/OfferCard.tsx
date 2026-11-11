@@ -52,9 +52,7 @@ export const OfferCard: React.FC<OfferCardProps> = ({
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-2">
           <div className="flex items-center bg-slate-800 px-2.5 py-1 rounded-lg border border-slate-700/60">
-            <span className="font-mono text-xs text-cyan-300 font-medium">
-              {truncatedAddress}
-            </span>
+            <span className="font-mono text-xs text-cyan-300 font-medium">{truncatedAddress}</span>
             <CopyButton text={offer.sellerAddress} label="Copy seller address" />
           </div>
         </div>
@@ -66,9 +64,7 @@ export const OfferCard: React.FC<OfferCardProps> = ({
         <div>
           <span className="text-[11px] text-slate-400 block font-medium">Offered Price</span>
           <div className="flex items-baseline space-x-1.5 mt-0.5">
-            <span className="text-xl font-bold font-mono text-emerald-400">
-              {formattedPrice}
-            </span>
+            <span className="text-xl font-bold font-mono text-emerald-400">{formattedPrice}</span>
             <span className="text-xs text-slate-400 font-semibold">{assetCode}</span>
           </div>
         </div>
@@ -99,9 +95,7 @@ export const OfferCard: React.FC<OfferCardProps> = ({
           <span className="text-[10px] text-slate-400 uppercase font-semibold block mb-0.5">
             Lead Time
           </span>
-          <span className="font-semibold text-slate-200 truncate block">
-            {humanLeadTime}
-          </span>
+          <span className="font-semibold text-slate-200 truncate block">{humanLeadTime}</span>
         </div>
       </div>
 
@@ -118,15 +112,10 @@ export const OfferCard: React.FC<OfferCardProps> = ({
             className="px-4 py-1.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 disabled:opacity-50 text-white text-xs font-semibold rounded-xl shadow-md shadow-cyan-900/30 transition flex items-center space-x-1.5"
             data-testid="accept-offer-btn"
           >
-            {isAccepting ? (
-              <span>Accepting...</span>
-            ) : (
-              <span>Accept Bid</span>
-            )}
+            {isAccepting ? <span>Accepting...</span> : <span>Accept Bid</span>}
           </button>
         )}
       </div>
     </div>
   );
 };
-

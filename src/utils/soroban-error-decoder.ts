@@ -32,7 +32,8 @@ export const CONTRACT_ERROR_MAP: Record<number, DecodedContractError> = {
     name: 'Unauthorized',
     title: 'Unauthorized Action',
     explanation: 'The calling account does not have permission to execute this operation.',
-    remediation: 'Ensure your connected Stellar wallet matches the authorized owner or administrator.',
+    remediation:
+      'Ensure your connected Stellar wallet matches the authorized owner or administrator.',
   },
   4: {
     code: 4,
@@ -52,7 +53,8 @@ export const CONTRACT_ERROR_MAP: Record<number, DecodedContractError> = {
     code: 6,
     name: 'CircleNotSettled',
     title: 'Circle Not Settled',
-    explanation: 'Deal settlement operations require the demand circle to be successfully closed first.',
+    explanation:
+      'Deal settlement operations require the demand circle to be successfully closed first.',
     remediation: 'Wait for buyer commitments to meet quorum and the inspection window to pass.',
   },
   7: {
@@ -67,28 +69,33 @@ export const CONTRACT_ERROR_MAP: Record<number, DecodedContractError> = {
     name: 'InvalidVolume',
     title: 'Invalid Order Volume',
     explanation: 'The requested quantity is zero or exceeds allowable circle parameters.',
-    remediation: 'Enter a valid positive unit quantity within the minimum and maximum order constraints.',
+    remediation:
+      'Enter a valid positive unit quantity within the minimum and maximum order constraints.',
   },
   9: {
     code: 9,
     name: 'DeadlinePassed',
     title: 'Circle Deadline Expired',
     explanation: 'The deadline for participating in this demand circle has already elapsed.',
-    remediation: 'This circle is now closed to new commitments or offers. Request a refund or check newer circles.',
+    remediation:
+      'This circle is now closed to new commitments or offers. Request a refund or check newer circles.',
   },
   10: {
     code: 10,
     name: 'DeadlineNotPassed',
     title: 'Deadline Still Active',
-    explanation: 'Premature expiration cannot be triggered while the participation window remains active.',
-    remediation: 'Wait until the target ledger timestamp has elapsed before closing or triggering expiry refunds.',
+    explanation:
+      'Premature expiration cannot be triggered while the participation window remains active.',
+    remediation:
+      'Wait until the target ledger timestamp has elapsed before closing or triggering expiry refunds.',
   },
   11: {
     code: 11,
     name: 'QuorumNotReached',
     title: 'Target Quorum Not Reached',
     explanation: 'The total committed volume is below the required threshold for deal execution.',
-    remediation: 'Share the circle with other buyers to attract additional volume before the deadline.',
+    remediation:
+      'Share the circle with other buyers to attract additional volume before the deadline.',
   },
   12: {
     code: 12,
@@ -102,7 +109,8 @@ export const CONTRACT_ERROR_MAP: Record<number, DecodedContractError> = {
     name: 'OfferMismatch',
     title: 'Offer Parameter Mismatch',
     explanation: 'The submitted deal parameters do not match the recorded merchant offer.',
-    remediation: 'Refresh offer details to ensure the pricing, volume, and lead time match the on-chain record.',
+    remediation:
+      'Refresh offer details to ensure the pricing, volume, and lead time match the on-chain record.',
   },
   14: {
     code: 14,
@@ -116,7 +124,8 @@ export const CONTRACT_ERROR_MAP: Record<number, DecodedContractError> = {
     name: 'CommitmentNotFound',
     title: 'No Escrow Commitment Found',
     explanation: 'No active buyer commitment was found for the specified account in this circle.',
-    remediation: 'Verify your connected wallet address corresponds to the buyer who deposited escrow.',
+    remediation:
+      'Verify your connected wallet address corresponds to the buyer who deposited escrow.',
   },
   16: {
     code: 16,
@@ -130,13 +139,15 @@ export const CONTRACT_ERROR_MAP: Record<number, DecodedContractError> = {
     name: 'VolumeExceeded',
     title: 'Maximum Circle Volume Exceeded',
     explanation: 'Your commitment quantity exceeds the maximum allowable units for this circle.',
-    remediation: 'Reduce the quantity of units requested to fit within the remaining circle capacity.',
+    remediation:
+      'Reduce the quantity of units requested to fit within the remaining circle capacity.',
   },
   18: {
     code: 18,
     name: 'RegistryError',
     title: 'Registry Cross-Contract Failure',
-    explanation: 'The deal engine encountered an error communicating with the demand circle registry contract.',
+    explanation:
+      'The deal engine encountered an error communicating with the demand circle registry contract.',
     remediation: 'Confirm both contracts are deployed on the same Stellar network (Testnet).',
   },
   19: {
@@ -157,7 +168,8 @@ export const CONTRACT_ERROR_MAP: Record<number, DecodedContractError> = {
     code: 21,
     name: 'NotUnderInspection',
     title: 'Deal Not Under Inspection',
-    explanation: 'Final settlement or buyer dispute filings require the deal to be in the inspection phase.',
+    explanation:
+      'Final settlement or buyer dispute filings require the deal to be in the inspection phase.',
     remediation: 'Ensure the seller has fulfilled the order and marked the deal as delivered.',
   },
   22: {
@@ -178,7 +190,8 @@ export const CONTRACT_ERROR_MAP: Record<number, DecodedContractError> = {
     code: 24,
     name: 'DisputeUnauthorized',
     title: 'Dispute Action Unauthorized',
-    explanation: 'Only the circle creator or designated arbitrator can perform this dispute action.',
+    explanation:
+      'Only the circle creator or designated arbitrator can perform this dispute action.',
     remediation: 'Connect the administrator or buyer address that initiated the order.',
   },
   25: {
@@ -192,14 +205,17 @@ export const CONTRACT_ERROR_MAP: Record<number, DecodedContractError> = {
     code: 26,
     name: 'NoSurplusRebate',
     title: 'No Surplus Rebate Available',
-    explanation: 'The final deal cleared at the ceiling price; there is no price delta rebate to claim.',
-    remediation: 'Surplus rebates are only available when the merchant cleared below buyer target price.',
+    explanation:
+      'The final deal cleared at the ceiling price; there is no price delta rebate to claim.',
+    remediation:
+      'Surplus rebates are only available when the merchant cleared below buyer target price.',
   },
   27: {
     code: 27,
     name: 'AlreadyClaimedRebate',
     title: 'Rebate Already Claimed',
-    explanation: 'Your account has already claimed its proportional surplus rebate for this circle.',
+    explanation:
+      'Your account has already claimed its proportional surplus rebate for this circle.',
     remediation: 'Your escrow savings rebate has already been credited to your Stellar wallet.',
   },
 };
@@ -209,7 +225,8 @@ export const UNKNOWN_SOROBAN_ERROR: DecodedContractError = {
   name: 'UnknownContractError',
   title: 'Soroban Execution Failure',
   explanation: 'The Soroban smart contract returned an unspecified error or trap during execution.',
-  remediation: 'Check your wallet balance, asset trustlines, and network connectivity before re-submitting.',
+  remediation:
+    'Check your wallet balance, asset trustlines, and network connectivity before re-submitting.',
 };
 
 /**
@@ -217,11 +234,13 @@ export const UNKNOWN_SOROBAN_ERROR: DecodedContractError = {
  */
 export function decodeSorobanError(rawError: unknown): DecodedContractError {
   if (typeof rawError === 'number') {
-    return CONTRACT_ERROR_MAP[rawError] || {
-      ...UNKNOWN_SOROBAN_ERROR,
-      code: rawError,
-      explanation: `Soroban contract error code #${rawError} returned without mapped metadata.`,
-    };
+    return (
+      CONTRACT_ERROR_MAP[rawError] || {
+        ...UNKNOWN_SOROBAN_ERROR,
+        code: rawError,
+        explanation: `Soroban contract error code #${rawError} returned without mapped metadata.`,
+      }
+    );
   }
 
   const errorString = String(
@@ -254,7 +273,8 @@ export function decodeSorobanError(rawError: unknown): DecodedContractError {
       code: 101,
       name: 'InsufficientBalance',
       title: 'Insufficient Stellar Balance',
-      explanation: 'Your account lacks sufficient balance to cover the transaction value or network fees.',
+      explanation:
+        'Your account lacks sufficient balance to cover the transaction value or network fees.',
       remediation: 'Fund your Stellar account using Friendbot on Testnet or deposit XLM.',
     };
   }
@@ -265,10 +285,10 @@ export function decodeSorobanError(rawError: unknown): DecodedContractError {
       name: 'UserRejected',
       title: 'Transaction Signature Cancelled',
       explanation: 'The transaction was cancelled or rejected in your Stellar wallet extension.',
-      remediation: 'Approve the signature request in Freighter or your connected wallet to proceed.',
+      remediation:
+        'Approve the signature request in Freighter or your connected wallet to proceed.',
     };
   }
 
   return UNKNOWN_SOROBAN_ERROR;
 }
-

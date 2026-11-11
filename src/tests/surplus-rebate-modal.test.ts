@@ -46,6 +46,8 @@ describe('SurplusRebateModal component', () => {
     expect(element.props.isOpen).toBe(true);
     expect(element.props.circleTitle).toBe('Bulk Flour Order');
     expect(element.props.buyerCommittedVolume).toBe(100);
-    expect(element.props.targetUnitPriceStroops - element.props.acceptedUnitPriceStroops).toBe(2_000_000n);
+    expect(element.props.targetUnitPriceStroops - element.props.acceptedUnitPriceStroops).toBe(
+      2_000_000n
+    );
   });
 });

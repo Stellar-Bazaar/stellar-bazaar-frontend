@@ -42,4 +42,3 @@ describe('ExplorerLink and buildExplorerUrl', () => {
     expect(element.props.network).toBe('testnet');
   });
 });
-

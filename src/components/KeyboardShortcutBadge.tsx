@@ -46,4 +46,3 @@ export const KeyboardShortcutBadge: React.FC<KeyboardShortcutBadgeProps> = ({
     </span>
   );
 };
-

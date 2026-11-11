@@ -10,9 +10,7 @@ interface DemandCircleCardProps {
 
 export const DemandCircleCard: React.FC<DemandCircleCardProps> = React.memo(
   ({ circle, onSelect }) => {
-    const totalPoolXlm = (
-      circle.target_quantity * parseFloat(circle.target_price_xlm)
-    ).toFixed(2);
+    const totalPoolXlm = (circle.target_quantity * parseFloat(circle.target_price_xlm)).toFixed(2);
 
     const badgeConfig = getStatusBadgeConfig(circle.status);
     const isQuorum = (circle.status as string) === 'QUORUM_REACHED';
@@ -43,7 +41,9 @@ export const DemandCircleCard: React.FC<DemandCircleCardProps> = React.memo(
             }}
           >
             <span className="badge badge-primary">Circle #{circle.id}</span>
-            <span className={`badge ${badgeConfig.className} ${isQuorum ? 'badge-quorum-pulse' : ''}`}>
+            <span
+              className={`badge ${badgeConfig.className} ${isQuorum ? 'badge-quorum-pulse' : ''}`}
+            >
               {badgeConfig.label}
             </span>
           </div>
@@ -61,7 +61,10 @@ export const DemandCircleCard: React.FC<DemandCircleCardProps> = React.memo(
           </h3>
 
           <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
-            Creator: <span style={{ fontFamily: 'monospace' }}>{circle.creator.slice(0, 8)}...{circle.creator.slice(-6)}</span>
+            Creator:{' '}
+            <span style={{ fontFamily: 'monospace' }}>
+              {circle.creator.slice(0, 8)}...{circle.creator.slice(-6)}
+            </span>
           </div>
 
           {/* Commercial Metrics Box */}
@@ -78,13 +81,23 @@ export const DemandCircleCard: React.FC<DemandCircleCardProps> = React.memo(
             }}
           >
             <div>
-              <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block' }}>Target Pool</span>
-              <span style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--accent-primary-light)' }}>
+              <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block' }}>
+                Target Pool
+              </span>
+              <span
+                style={{
+                  fontSize: '0.95rem',
+                  fontWeight: 700,
+                  color: 'var(--accent-primary-light)',
+                }}
+              >
                 {circle.target_quantity} units
               </span>
             </div>
             <div>
-              <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block' }}>Max Unit Price</span>
+              <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block' }}>
+                Max Unit Price
+              </span>
               <span style={{ fontSize: '0.95rem', fontWeight: 700, color: '#34d399' }}>
                 {circle.target_price_xlm} XLM
               </span>
